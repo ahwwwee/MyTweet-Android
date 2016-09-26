@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyTweet</string>
+    <string name="welcome_message">Welcome to MyTweet</string>
+    <string name="welcome_submessage">Come and see the drivel others think is important</string>
+    <string name="login_button">Log In</string>
+    <string name="signup_button">Sign Up</string>
+</resources>
