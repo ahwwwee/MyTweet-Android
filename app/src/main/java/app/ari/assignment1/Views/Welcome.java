@@ -9,7 +9,7 @@ import android.widget.Button;
 import app.ari.assignment1.R;
 import app.ari.assignment1.App.TweetApp;
 
-public class welcome extends AppCompatActivity implements View.OnClickListener {
+public class Welcome extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

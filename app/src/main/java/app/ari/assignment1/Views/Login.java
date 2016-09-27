@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import app.ari.assignment1.R;
 import app.ari.assignment1.App.TweetApp;
@@ -39,8 +40,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         String Email = this.email.getText().toString();
         String Password = this.password.getText().toString();
         if(app.findByEmail(Email, Password) == true) {
-            startActivity(new Intent(this, welcome.class));
+            startActivity(new Intent(this, Tweeter.class));
         }
+        Toast toast = Toast.makeText(app, "Log in Failed", Toast.LENGTH_SHORT);
         email.setText("");
         password.setText("");
     }

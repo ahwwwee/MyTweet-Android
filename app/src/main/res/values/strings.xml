@@ -10,4 +10,8 @@
     <string name="password">Password</string>
     <string name="register">Register</string>
     <string name="signIn">Sign In</string>
+    <string name="tweetButton">Tweet</string>
+    <string name="selectContact">Select Contact</string>
+    <string name="emailTweet">Email Tweet</string>
+    <string name="counter">140</string>
 </resources>

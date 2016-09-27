@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name="app.ari.assignment1.App.TweetApp">
-        <activity android:name=".Views.welcome">
+        <activity android:name=".Views.Welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -18,6 +18,9 @@
         <activity android:name=".Views.Login" >
         </activity>
         <activity android:name=".Views.Signup">
+        </activity>
+        <activity android:name=".Views.Tweeter">
+
         </activity>
     </application>
 
