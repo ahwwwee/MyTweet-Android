@@ -4,4 +4,9 @@
     <string name="welcome_submessage">Come and see the drivel others think is important</string>
     <string name="login_button">Log In</string>
     <string name="signup_button">Sign Up</string>
+    <string name="firstName">FirstName</string>
+    <string name="lastName">LastName</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
 </resources>
