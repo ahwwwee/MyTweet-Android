@@ -28,6 +28,7 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
     public TextView counter;
     public int count = 140;
     public EditText tweetTweet;
+    private String charLeftString;
 
 
     @Override
@@ -37,7 +38,7 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
 
         app = (TweetApp) getApplication();
 
-
+        counter = (TextView) findViewById(R.id.counter);
         tweetTweet = (EditText) findViewById(R.id.tweetTweet);
         Button tweet = (Button)findViewById(R.id.tweetButton);
         Button selectContact = (Button)findViewById(R.id.selectContact);
@@ -55,7 +56,6 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
         emailTweet.setOnClickListener(this);
 
         date.setText(today);
-        counter.setText("" + count);
     }
 
     @Override
@@ -69,11 +69,6 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
 
     @Override
     public void beforeTextChanged(CharSequence tweetTweet, int i, int i1, int i2) {
-        if(tweetTweet.length() > 0){
-            count -= tweetTweet.length();
-            counter.setText("" + count);
-        }
-        return;
     }
 
     @Override
@@ -82,7 +77,8 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
 
     @Override
     public void afterTextChanged(Editable s){
-        count -= s.length();
-        counter.setText("" + count);
+        int left = (count - s.length());
+        charLeftString = Integer.toString(left);
+        counter.setText(charLeftString);
     }
 }
