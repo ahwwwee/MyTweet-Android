@@ -3,6 +3,8 @@
     <string name="welcome_message">Welcome to MyTweet</string>
     <string name="welcome_submessage">Come and see the drivel others think is important</string>
     <string name="login_button">Log In</string>
+    <string name="loginHead">Enter your details to login</string>
+    <string name="signupHead">Enter your details to Register</string>
     <string name="signup_button">Sign Up</string>
     <string name="firstName">FirstName</string>
     <string name="lastName">LastName</string>
