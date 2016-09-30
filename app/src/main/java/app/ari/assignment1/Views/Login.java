@@ -42,8 +42,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         if(app.findByEmail(Email, Password) == true) {
             startActivity(new Intent(this, Tweeter.class));
         }
-        Toast toast = Toast.makeText(app, "Log in Failed", Toast.LENGTH_SHORT);
-        email.setText("");
-        password.setText("");
+        else {
+            Toast toast = Toast.makeText(Login.this, "Log in Failed", Toast.LENGTH_SHORT);
+            toast.show();
+            email.setText("");
+            password.setText("");
+        }
     }
 }

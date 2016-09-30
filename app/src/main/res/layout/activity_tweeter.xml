@@ -16,16 +16,13 @@
         android:background="@color/colorAccent"
         android:id="@+id/tweetButton"
         android:layout_gravity="right"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_alignBottom="@+id/counter"
+        android:layout_above="@+id/tweetTweetWrap"
         android:layout_alignEnd="@+id/emailTweet" />
 
     <TextView
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:text="@string/counter"
         android:id="@+id/counter"
         android:textColor="@color/black"
         android:textStyle="bold"
@@ -35,17 +32,19 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tweetTweet"
         android:hint="Whats in your mind?"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentEnd="true"
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:id="@+id/tweetTweet"
         android:layout_above="@+id/date"
-        android:layout_below="@+id/counter" />
+        android:layout_below="@+id/counter"
+        android:maxLength="140"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/date"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/black"

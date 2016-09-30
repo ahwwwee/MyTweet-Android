@@ -13,5 +13,4 @@
     <string name="tweetButton">Tweet</string>
     <string name="selectContact">Select Contact</string>
     <string name="emailTweet">Email Tweet</string>
-    <string name="counter">140</string>
 </resources>
