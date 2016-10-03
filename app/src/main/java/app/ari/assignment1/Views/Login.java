@@ -40,7 +40,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         String Email = this.email.getText().toString();
         String Password = this.password.getText().toString();
         if(app.findByEmail(Email, Password) == true) {
-            startActivity(new Intent(this, Tweeter.class));
+            startActivity(new Intent(this, Timeline.class));
         }
         else {
             Toast toast = Toast.makeText(Login.this, "Log in Failed", Toast.LENGTH_SHORT);

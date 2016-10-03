@@ -5,13 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import static app.ari.assignment1.Helper.Helper.*;
 
 import java.util.Date;
 
@@ -35,6 +38,7 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweeter);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         app = (TweetApp) getApplication();
 
@@ -43,8 +47,6 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
         Button tweet = (Button)findViewById(R.id.tweetButton);
         Button selectContact = (Button)findViewById(R.id.selectContact);
         Button emailTweet = (Button)findViewById(R.id.emailTweet);
-
-        TextView counter = (TextView)findViewById(R.id.counter);
 
         tweetTweet.addTextChangedListener(this);
 
@@ -56,6 +58,15 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
         emailTweet.setOnClickListener(this);
 
         date.setText(today);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case android.R.id.home:
+                navigateUp(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
