@@ -1,5 +1,6 @@
 package app.ari.assignment1.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -17,6 +18,8 @@ import java.util.Date;
 
 import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.R;
+import app.ari.assignment1.models.Tweet;
+import app.ari.assignment1.models.TweetList;
 
 /**
  * Created by ictskills on 27/09/16.
@@ -72,6 +75,10 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
             case (R.id.tweetButton):
                 Toast toast = Toast.makeText(Tweeter.this, "Message Sent", Toast.LENGTH_SHORT);
                 toast.show();
+                String tweetMessage = this.tweetTweet.getText().toString();
+                Tweet tweet = new Tweet(tweetMessage);
+                TweetList.addTweet(tweet);
+                startActivity(new Intent(this, Timeline.class));
         }
     }
 

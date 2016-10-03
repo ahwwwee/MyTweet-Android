@@ -5,6 +5,7 @@ import android.app.Application;
 import java.util.ArrayList;
 
 import app.ari.assignment1.models.User;
+import app.ari.assignment1.models.TweetList;
 
 /**
  * Created by ictskills on 27/09/16.
@@ -12,9 +13,12 @@ import app.ari.assignment1.models.User;
 public class TweetApp extends Application {
     public ArrayList<User> users = new ArrayList<>();
 
+    public TweetList tweetList;
+
     @Override
     public void onCreate(){
         super.onCreate();
+        tweetList = new TweetList();
     }
 
     public void addUser(User user){
@@ -29,4 +33,5 @@ public class TweetApp extends Application {
         }
         return false;
     }
+
 }
