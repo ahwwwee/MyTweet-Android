@@ -1,4 +1,4 @@
-package app.ari.assignment1.Views;
+package app.ari.assignment1.views;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import app.ari.assignment1.R;
-import app.ari.assignment1.App.TweetApp;
+import app.ari.assignment1.app.TweetApp;
 
 /**
  * Created by ictskills on 27/09/16.

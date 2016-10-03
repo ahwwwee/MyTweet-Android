@@ -1,10 +1,10 @@
-package app.ari.assignment1.App;
+package app.ari.assignment1.app;
 
 import android.app.Application;
 
 import java.util.ArrayList;
 
-import app.ari.assignment1.Models.User;
+import app.ari.assignment1.models.User;
 
 /**
  * Created by ictskills on 27/09/16.

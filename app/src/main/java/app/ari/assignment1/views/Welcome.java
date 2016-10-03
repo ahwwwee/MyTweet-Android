@@ -1,4 +1,4 @@
-package app.ari.assignment1.Views;
+package app.ari.assignment1.views;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import app.ari.assignment1.R;
-import app.ari.assignment1.App.TweetApp;
+import app.ari.assignment1.app.TweetApp;
 
 public class Welcome extends AppCompatActivity implements View.OnClickListener {
 

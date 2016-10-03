@@ -1,5 +1,4 @@
-package app.ari.assignment1.Helper;
-import java.io.Serializable;
+package app.ari.assignment1.helper;
 
 import android.app.Activity;
 import android.content.Intent;

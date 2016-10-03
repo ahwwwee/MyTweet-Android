@@ -1,4 +1,4 @@
-package app.ari.assignment1.Models;
+package app.ari.assignment1.models;
 
 /**
  * Created by ictskills on 27/09/16.
