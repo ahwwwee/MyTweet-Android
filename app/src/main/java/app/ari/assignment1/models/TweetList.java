@@ -1,5 +1,10 @@
 package app.ari.assignment1.models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -7,9 +12,25 @@ import java.util.ArrayList;
  */
 public class TweetList {
     public static ArrayList<Tweet> tweets;
+    private TweetListSerializer serializer;
 
-    public TweetList(){
-        tweets = new ArrayList<>();
+    public TweetList(TweetListSerializer serializer){
+        this.serializer = serializer;
+        try{
+            tweets = serializer.loadTweets();
+        } catch (Exception e) {
+            tweets = new ArrayList<>();
+        }
+    }
+
+    public boolean saveTweets(){
+        try{
+            serializer.saveTweet(tweets);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
     }
 
     public static void addTweet(Tweet tweet){
@@ -24,4 +45,10 @@ public class TweetList {
         }
         return null;
     }
+
+    public void deleteTweet(Tweet tweet){
+        tweets.remove(tweet);
+        saveTweets();
+    }
+
 }

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import static app.ari.assignment1.helper.Helper.*;
 
+import java.sql.Time;
 import java.util.Date;
 
 import app.ari.assignment1.app.TweetApp;
@@ -69,6 +70,12 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
         }
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        tweetList.saveTweets();
+    }
+
     public void updateDetails(Tweet tweet){
         tweetTweet.setText(tweet.content);
         date.setText(tweet.date.toString());
@@ -77,6 +84,9 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case android.R.id.home:
+                if(tweetTweet.getText().toString().equals("")){
+                    TweetList.tweets.remove(editTweet);
+                }
                 navigateUp(this);
                 return true;
         }
@@ -89,14 +99,6 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
             case (R.id.tweetButton):
                 Toast toast = Toast.makeText(Tweeter.this, "Message Sent", Toast.LENGTH_SHORT);
                 toast.show();
-                String tweetMessage = this.tweetTweet.getText().toString();
-                if(tweetMessage.isEmpty()){
-                    TweetList.tweets.remove(editTweet);
-                }
-                else {
-                    editTweet.content = tweetMessage;
-                }
-                startActivity(new Intent(this, Timeline.class));
         }
     }
 
@@ -113,5 +115,7 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
         int left = (count - s.length());
         charLeftString = Integer.toString(left);
         counter.setText(charLeftString);
+        String tweetMessage = this.tweetTweet.getText().toString();
+        editTweet.content = tweetMessage;
     }
 }

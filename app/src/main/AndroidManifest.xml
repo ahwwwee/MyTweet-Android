@@ -9,15 +9,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".views.Welcome">
+        <activity android:name=".views.Welcome"></activity>
+        <activity android:name=".views.Login"></activity>
+        <activity android:name=".views.Signup"></activity>
+        <activity android:name=".views.Timeline">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.Login"></activity>
-        <activity android:name=".views.Signup"></activity>
-        <activity android:name=".views.Timeline"></activity>
         <activity
             android:name=".views.Tweeter"
             android:label="@string/app_name">

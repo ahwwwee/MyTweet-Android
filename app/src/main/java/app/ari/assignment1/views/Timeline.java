@@ -53,6 +53,13 @@ public class Timeline extends AppCompatActivity implements AdapterView.OnItemCli
         timeline.setAdapter(adapter);
     }
 
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();

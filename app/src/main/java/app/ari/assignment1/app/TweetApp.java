@@ -4,6 +4,7 @@ import android.app.Application;
 
 import java.util.ArrayList;
 
+import app.ari.assignment1.models.TweetListSerializer;
 import app.ari.assignment1.models.User;
 import app.ari.assignment1.models.TweetList;
 
@@ -12,13 +13,14 @@ import app.ari.assignment1.models.TweetList;
  */
 public class TweetApp extends Application {
     public ArrayList<User> users = new ArrayList<>();
-
+    private static final String FILENAME = "portfolio.json";
     public TweetList tweetList;
 
     @Override
     public void onCreate(){
         super.onCreate();
-        tweetList = new TweetList();
+        TweetListSerializer serializer = new TweetListSerializer(this, FILENAME);
+        tweetList = new TweetList(serializer);
     }
 
     public void addUser(User user){

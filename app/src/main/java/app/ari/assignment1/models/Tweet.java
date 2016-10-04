@@ -12,18 +12,30 @@ import java.util.Random;
 public class Tweet {
 
     public Long id;
-    public Date date;
+    public String date;
     public String content;
+
+    public static final String JSON_ID = "id";
+    public static final String JSON_CONTENT = "content";
+    public static final String JSON_DATE = "date";
 
     public Tweet(){
         id = new Random().nextLong();
-        date = new Date();
+        date = new Date().toString();
     }
 
-    public Tweet(String content){
-        id = new Random().nextLong();
-        this.content = content;
-        date = new Date();
+    public Tweet(JSONObject json) throws JSONException{
+        id = json.getLong(JSON_ID);
+        content = json.getString(JSON_CONTENT);
+        date = json.getString(JSON_DATE);
+    }
+
+    public JSONObject toJSON() throws JSONException{
+        JSONObject json = new JSONObject();
+        json.put(JSON_ID, Long.toString(id));
+        json.put(JSON_CONTENT, content);
+        json.put(JSON_DATE, date);
+        return json;
     }
 
 }
