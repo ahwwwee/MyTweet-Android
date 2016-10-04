@@ -15,6 +15,11 @@ public class Tweet {
     public Date date;
     public String content;
 
+    public Tweet(){
+        id = new Random().nextLong();
+        date = new Date();
+    }
+
     public Tweet(String content){
         id = new Random().nextLong();
         this.content = content;

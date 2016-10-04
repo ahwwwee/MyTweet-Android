@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -25,10 +26,12 @@ import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.models.Tweet;
 import app.ari.assignment1.models.TweetList;
 
+import static app.ari.assignment1.helper.Helper.startActivityWithDataForResults;
+
 /**
  * Created by ictskills on 03/10/16.
  */
-public class Timeline extends AppCompatActivity{
+public class Timeline extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     public TweetApp app;
     public ListView timeline;
@@ -45,13 +48,13 @@ public class Timeline extends AppCompatActivity{
         timeline = (ListView) findViewById(R.id.timeline);
         tweetList = app.tweetList;
 
+        timeline.setOnItemClickListener(this);
         adapter = new TweetAdapter(this, TweetList.tweets);
         timeline.setAdapter(adapter);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_tweeter, menu);
         return true;
@@ -62,13 +65,22 @@ public class Timeline extends AppCompatActivity{
             case R.id.settings: Toast toast = Toast.makeText(Timeline.this, "Setting pressed", Toast.LENGTH_SHORT);
                 toast.show();
                 return true;
-            case R.id.newTweet: startActivity(new Intent(this, Tweeter.class));
+            case R.id.newTweet:Tweet tweet = new Tweet();
+                TweetList.addTweet(tweet);
+                startActivityWithDataForResults(this, Tweeter.class, "Tweet_ID", tweet.id);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Tweet tweet = adapter.getItem(i);
+        Intent intent = new Intent(this, Tweeter.class);
+        intent.putExtra("Tweet_ID", tweet.id);
+        startActivity(intent);
+    }
 }
 
 class TweetAdapter extends ArrayAdapter<Tweet>{

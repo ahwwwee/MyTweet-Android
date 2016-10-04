@@ -32,6 +32,8 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
     public int count = 140;
     public EditText tweetTweet;
     private String charLeftString;
+    private TweetList tweetList;
+    public Tweet editTweet;
 
 
     @Override
@@ -42,6 +44,7 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
 
         app = (TweetApp) getApplication();
 
+        tweetList = app.tweetList;
         counter = (TextView) findViewById(R.id.counter);
         tweetTweet = (EditText) findViewById(R.id.tweetTweet);
         Button tweet = (Button)findViewById(R.id.tweetButton);
@@ -58,6 +61,17 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
         emailTweet.setOnClickListener(this);
 
         date.setText(today);
+
+        Long tweetId = (Long) getIntent().getExtras().getSerializable("Tweet_ID");
+        editTweet = tweetList.getTweet(tweetId);
+        if(tweet != null){
+            updateDetails(editTweet);
+        }
+    }
+
+    public void updateDetails(Tweet tweet){
+        tweetTweet.setText(tweet.content);
+        date.setText(tweet.date.toString());
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
@@ -76,8 +90,7 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
                 Toast toast = Toast.makeText(Tweeter.this, "Message Sent", Toast.LENGTH_SHORT);
                 toast.show();
                 String tweetMessage = this.tweetTweet.getText().toString();
-                Tweet tweet = new Tweet(tweetMessage);
-                TweetList.addTweet(tweet);
+                editTweet.content = tweetMessage;
                 startActivity(new Intent(this, Timeline.class));
         }
     }
