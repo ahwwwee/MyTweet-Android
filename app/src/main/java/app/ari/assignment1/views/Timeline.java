@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -31,7 +33,7 @@ import static app.ari.assignment1.helper.Helper.startActivityWithDataForResults;
 /**
  * Created by ictskills on 03/10/16.
  */
-public class Timeline extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class Timeline extends AppCompatActivity implements AdapterView.OnItemClickListener, AbsListView.MultiChoiceModeListener{
 
     public TweetApp app;
     public ListView timeline;
@@ -49,10 +51,11 @@ public class Timeline extends AppCompatActivity implements AdapterView.OnItemCli
         tweetList = app.tweetList;
 
         timeline.setOnItemClickListener(this);
+        timeline.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        timeline.setMultiChoiceModeListener(this);
         adapter = new TweetAdapter(this, TweetList.tweets);
         timeline.setAdapter(adapter);
     }
-
 
     @Override
     public void onResume(){
@@ -90,6 +93,49 @@ public class Timeline extends AppCompatActivity implements AdapterView.OnItemCli
         Intent intent = new Intent(this, Tweeter.class);
         intent.putExtra("Tweet_ID", tweet.id);
         startActivity(intent);
+    }
+
+    @Override
+    public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
+
+    }
+
+    @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        MenuInflater inflater = actionMode.getMenuInflater();
+        inflater.inflate(R.menu.tweet_list_context, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+        switch(menuItem.getItemId()){
+            case R.id.delete_tweet:
+                deleteTweet(actionMode);
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode actionMode) {
+
+    }
+
+    public void deleteTweet(ActionMode actionMode){
+        for(int i = adapter.getCount() - 1; i >= 0; i--){
+            if(timeline.isItemChecked(i)){
+                tweetList.deleteTweet(adapter.getItem(i));
+            }
+
+        }
+        actionMode.finish();
+        adapter.notifyDataSetChanged();
     }
 }
 
