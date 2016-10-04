@@ -90,7 +90,12 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
                 Toast toast = Toast.makeText(Tweeter.this, "Message Sent", Toast.LENGTH_SHORT);
                 toast.show();
                 String tweetMessage = this.tweetTweet.getText().toString();
-                editTweet.content = tweetMessage;
+                if(tweetMessage.isEmpty()){
+                    TweetList.tweets.remove(editTweet);
+                }
+                else {
+                    editTweet.content = tweetMessage;
+                }
                 startActivity(new Intent(this, Timeline.class));
         }
     }

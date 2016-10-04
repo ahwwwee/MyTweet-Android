@@ -65,6 +65,9 @@ public class Timeline extends AppCompatActivity implements AdapterView.OnItemCli
             case R.id.settings: Toast toast = Toast.makeText(Timeline.this, "Setting pressed", Toast.LENGTH_SHORT);
                 toast.show();
                 return true;
+            case R.id.clear: TweetList.tweets.clear();
+                startActivity(new Intent(this, Timeline.class));
+                return true;
             case R.id.newTweet:Tweet tweet = new Tweet();
                 TweetList.addTweet(tweet);
                 startActivityWithDataForResults(this, Tweeter.class, "Tweet_ID", tweet.id);
