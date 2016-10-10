@@ -15,6 +15,7 @@ public class TweetApp extends Application {
     public ArrayList<User> users = new ArrayList<>();
     private static final String FILENAME = "portfolio.json";
     public TweetList tweetList;
+    public User currentUser;
 
     @Override
     public void onCreate(){
@@ -30,6 +31,7 @@ public class TweetApp extends Application {
     public boolean findByEmail(String email, String password){
         for(User u : users){
             if(email.equals(u.email) && password.equals(u.password)){
+                currentUser = u;
                 return true;
             }
         }

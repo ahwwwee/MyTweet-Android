@@ -14,20 +14,24 @@ import android.widget.Toast;
 
 import static app.ari.assignment1.helper.Helper.*;
 
-import java.sql.Time;
 import java.util.Date;
 
 import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.R;
+import app.ari.assignment1.helper.ContactHelper;
 import app.ari.assignment1.models.Tweet;
 import app.ari.assignment1.models.TweetList;
+import app.ari.assignment1.models.User;
 
+import static app.ari.assignment1.helper.ContactHelper.sendEmail;
 /**
  * Created by ictskills on 27/09/16.
  */
 public class Tweeter extends AppCompatActivity implements View.OnClickListener,TextWatcher{
 
     private TweetApp app;
+    private Button selectContact;
+    private Button emailTweet;
     public TextView date;
     public TextView counter;
     public int count = 140;
@@ -35,6 +39,10 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
     private String charLeftString;
     private TweetList tweetList;
     public Tweet editTweet;
+    private static final int REQUEST_CONTACT = 1;
+    private String emailAddress;
+    private String tweetMessage;
+    private User user;
 
 
     @Override
@@ -49,9 +57,10 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
         counter = (TextView) findViewById(R.id.counter);
         tweetTweet = (EditText) findViewById(R.id.tweetTweet);
         Button tweet = (Button)findViewById(R.id.tweetButton);
-        Button selectContact = (Button)findViewById(R.id.selectContact);
-        Button emailTweet = (Button)findViewById(R.id.emailTweet);
+        selectContact = (Button)findViewById(R.id.selectContact);
+        emailTweet = (Button)findViewById(R.id.emailTweet);
 
+        user = app.currentUser;
         tweetTweet.addTextChangedListener(this);
 
         date = (TextView) findViewById(R.id.date);
@@ -84,7 +93,7 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case android.R.id.home:
-                if(tweetTweet.getText().toString().equals("")){
+                if(editTweet != null) {
                     TweetList.tweets.remove(editTweet);
                 }
                 navigateUp(this);
@@ -95,10 +104,39 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
 
     @Override
     public void onClick(View view) {
+        tweetMessage = this.tweetTweet.getText().toString();
         switch (view.getId()){
             case (R.id.tweetButton):
-                Toast toast = Toast.makeText(Tweeter.this, "Message Sent", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(Tweeter.this, "Tweet Sent", Toast.LENGTH_SHORT);
                 toast.show();
+                if(tweetMessage.equals("")){
+                    TweetList.tweets.remove(editTweet);
+                }
+                else{
+                    editTweet.content = tweetMessage;
+                }
+                startActivity(new Intent(this, Timeline.class));
+                break;
+            case (R.id.selectContact):
+                selectContact(this, REQUEST_CONTACT);
+                break;
+            case (R.id.emailTweet):
+                if(emailAddress == null) {
+                    emailAddress = "ahwwwee@gmail.com";
+                    sendEmail(this, emailAddress, user + " has sent you a tweet", tweetMessage);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        switch(requestCode){
+            case REQUEST_CONTACT:
+                String name = ContactHelper.getContact(this, data);
+                emailAddress = ContactHelper.getEmail(this, data);
+                selectContact.setText(name + " : " + emailAddress);
+                break;
         }
     }
 
@@ -115,7 +153,5 @@ public class Tweeter extends AppCompatActivity implements View.OnClickListener,T
         int left = (count - s.length());
         charLeftString = Integer.toString(left);
         counter.setText(charLeftString);
-        String tweetMessage = this.tweetTweet.getText().toString();
-        editTweet.content = tweetMessage;
     }
 }

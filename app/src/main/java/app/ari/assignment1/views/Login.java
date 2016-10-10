@@ -16,8 +16,8 @@ import app.ari.assignment1.app.TweetApp;
  */
 public class Login extends AppCompatActivity implements View.OnClickListener{
 
-    TextView email;
-    TextView password;
+    private TextView email;
+    private TextView password;
     private TweetApp app;
 
     @Override
