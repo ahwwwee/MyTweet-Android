@@ -16,12 +16,14 @@ public class TweetApp extends Application {
     private static final String FILENAME = "portfolio.json";
     public TweetList tweetList;
     public User currentUser;
+    protected static TweetApp app;
 
     @Override
     public void onCreate(){
         super.onCreate();
         TweetListSerializer serializer = new TweetListSerializer(this, FILENAME);
         tweetList = new TweetList(serializer);
+        app = this;
     }
 
     public void addUser(User user){
@@ -36,6 +38,10 @@ public class TweetApp extends Application {
             }
         }
         return false;
+    }
+
+    public static TweetApp getApp(){
+        return app;
     }
 
 }

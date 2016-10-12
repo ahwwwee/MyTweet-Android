@@ -20,7 +20,7 @@ public class Tweet {
     public static final String JSON_DATE = "date";
 
     public Tweet(){
-        id = new Random().nextLong();
+        id = unsignedLong();
         date = new Date().toString();
     }
 
@@ -36,6 +36,14 @@ public class Tweet {
         json.put(JSON_CONTENT, content);
         json.put(JSON_DATE, date);
         return json;
+    }
+
+    private Long unsignedLong() {
+        long rndVal = 0;
+        do {
+            rndVal = new Random().nextLong();
+        } while (rndVal <= 0);
+        return rndVal;
     }
 
 }

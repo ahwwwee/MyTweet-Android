@@ -13,6 +13,12 @@ import java.io.Serializable;
  */
 public class Helper {
 
+    public static void startActivityWithData (Activity parent, Class classname, String extraID, Serializable extraData) {
+        Intent intent = new Intent(parent, classname);
+        intent.putExtra(extraID, extraData);
+        parent.startActivity(intent);
+    }
+
     public static void startActivityWithDataForResults(Activity parent, Class name, String extraID, Serializable extraData){
         Intent intent = new Intent(parent, name);
         intent.putExtra(extraID, extraData);
