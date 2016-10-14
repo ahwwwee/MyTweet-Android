@@ -202,8 +202,8 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
                     break;
                 case (R.id.emailTweet):
                     if(emailAddress.equals("")){
-                        Toast toast = Toast.makeText(getActivity(), "No contact selected, Select contact!", Toast.LENGTH_SHORT);
-                        toast.show();
+                        Toast toasty = Toast.makeText(getActivity(), "No contact selected, Select contact!", Toast.LENGTH_SHORT);
+                        toasty.show();
                     }
                     sendEmail(getActivity(), emailAddress, app.currentUser.firstName + " has sent you a tweet", tweetMessage);
                     break;
