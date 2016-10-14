@@ -1,4 +1,4 @@
-package app.ari.assignment1.models;
+package app.ari.assignment1.views;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -53,11 +53,10 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
         public EditText tweetTweet;
         private Tweet tweet;
         private TweetList tweetList;
-        private String emailAddress = "";
+        private String emailAddress = " ";
         public int count = 140;
         private String charLeftString;
-        private String tweetMessage;
-        public Tweet editTweet;
+        private String tweetMessage = " ";
         public TweetApp app;
 
         @Override
@@ -82,16 +81,20 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
             Tweeter tweeter = (Tweeter) getActivity();
             tweeter.actionBar.setDisplayHomeAsUpEnabled(true);
 
+            counter = (TextView) v.findViewById(R.id.counter);
+
             date = (TextView) v.findViewById(R.id.date);
             String today = new Date().toString();
             date.setText(today);
 
             addListeners(v);
-            updateControls(tweet);
+            if(tweet.content != null){
+              updateControls(tweet);
+            }
 
             return v;
         }
-
+ public Tweet editTweet;
         private void addListeners(View v)
         {
             tweetButton = (Button) v.findViewById(R.id.tweetButton);
@@ -110,6 +113,7 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
         {
             tweetTweet.setText(tweet.content);
             date.setText(tweet.date.toString());
+            tweetTweet.setEnabled(false);
         }
 
         @Override
@@ -117,7 +121,11 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
         {
             switch (item.getItemId())
             {
-                case android.R.id.home: navigateUp(getActivity());
+                case android.R.id.home:
+                    if(tweetMessage.equals(" ") && tweet.content.equals("")){
+                        TweetList.tweets.remove(tweet);
+                    }
+                    navigateUp(getActivity());
                     return true;
 
                 default:
@@ -181,10 +189,10 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
                     Toast toast = Toast.makeText(getActivity(), "Tweet Sent", Toast.LENGTH_SHORT);
                     toast.show();
                     if(tweetMessage.equals("")){
-                        TweetList.tweets.remove(editTweet);
+                        TweetList.tweets.remove(tweet);
                     }
                     else{
-                        editTweet.content = tweetMessage;
+                        tweet.content = tweetMessage;
                     }
                     startActivity(new Intent(getActivity(), Timeline.class));
                     break;

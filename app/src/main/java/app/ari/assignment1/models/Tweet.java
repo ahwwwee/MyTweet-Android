@@ -20,7 +20,8 @@ public class Tweet {
     public static final String JSON_DATE = "date";
 
     public Tweet(){
-        id = unsignedLong();
+        //id = unsignedLong();
+        id = Math.abs(new Random().nextLong());
         date = new Date().toString();
     }
 
