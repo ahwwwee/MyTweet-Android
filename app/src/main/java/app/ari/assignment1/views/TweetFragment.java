@@ -44,7 +44,7 @@ import static app.ari.assignment1.helper.Helper.selectContact;
 public class TweetFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher {
 
         public static   final String  EXTRA_TWEET_ID = "TWEET_ID";
-        private static  final int     REQUEST_CONTACT = 1;
+        private static  final int REQUEST_CONTACT = 1;
         public TextView date;
         public TextView counter;
         private Button tweetButton;
@@ -122,9 +122,9 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
             switch (item.getItemId())
             {
                 case android.R.id.home:
-                    if(tweetMessage.equals(" ") && tweet.content.equals("")){
+                    /*if(tweetMessage.equals(" ") && tweet.content.equals("")){
                         TweetList.tweets.remove(tweet);
-                    }
+                    }*/
                     navigateUp(getActivity());
                     return true;
 
@@ -154,7 +154,6 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
                     String name = ContactHelper.getContact(getActivity(), data);
                     app.currentUser.firstName = name;
                     emailAddress = ContactHelper.getEmail(getActivity(), data);
-                    emailTweet.setText(name + " : " + emailAddress);
                     break;
             }
         }
@@ -197,13 +196,16 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
                     startActivity(new Intent(getActivity(), Timeline.class));
                     break;
                 case (R.id.selectContact):
-                    selectContact(getActivity(), REQUEST_CONTACT);
+                    Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                    startActivityForResult(i, REQUEST_CONTACT);
+                    selectContact.setText(emailAddress);
                     break;
                 case (R.id.emailTweet):
-                    if(emailAddress == null) {
-                        emailAddress = "ahwwwee@gmail.com";
-                        sendEmail(getActivity(), emailAddress, app.currentUser.firstName + " has sent you a tweet", tweetMessage);
+                    if(emailAddress.equals("")){
+                        Toast toast = Toast.makeText(getActivity(), "No contact selected, Select contact!", Toast.LENGTH_SHORT);
+                        toast.show();
                     }
+                    sendEmail(getActivity(), emailAddress, app.currentUser.firstName + " has sent you a tweet", tweetMessage);
                     break;
             }
         }
