@@ -1,4 +1,4 @@
-package app.ari.assignment1.views;
+package app.ari.assignment1.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

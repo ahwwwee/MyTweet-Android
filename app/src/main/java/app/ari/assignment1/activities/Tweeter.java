@@ -1,4 +1,4 @@
-package app.ari.assignment1.views;
+package app.ari.assignment1.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +25,7 @@ public class Tweeter extends AppCompatActivity{
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
         if (fragment == null) {
-            fragment = new TweetFragment();
+            fragment = new TweeterFragment();
             manager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
         }
     }

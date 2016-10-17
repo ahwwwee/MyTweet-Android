@@ -1,15 +1,12 @@
-package app.ari.assignment1.views;
+package app.ari.assignment1.activities;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+
 import app.ari.assignment1.helper.ContactHelper;
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.models.TweetList;
 import app.ari.assignment1.models.Tweet;
-import app.ari.assignment1.views.Timeline;
-import app.ari.assignment1.views.Tweeter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,30 +15,25 @@ import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.app.DatePickerDialog;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import static app.ari.assignment1.helper.ContactHelper.sendEmail;
 import static app.ari.assignment1.helper.Helper.navigateUp;
-import static app.ari.assignment1.helper.Helper.selectContact;
 
 /**
  * Created by ictskills on 10/10/16.
  */
-public class TweetFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher {
+public class TweeterFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher {
 
         public static   final String  EXTRA_TWEET_ID = "TWEET_ID";
         private static  final int REQUEST_CONTACT = 1;
@@ -58,6 +50,7 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
         private String charLeftString;
         private String tweetMessage = " ";
         public TweetApp app;
+        public String contactName;
 
         @Override
         public void onCreate(Bundle savedInstanceState)
@@ -65,7 +58,7 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
             super.onCreate(savedInstanceState);
             setHasOptionsMenu(true);
 
-            Long tweetId = (Long) getActivity().getIntent().getSerializableExtra(EXTRA_TWEET_ID);
+            Long tweetId = (Long)getArguments().getSerializable(EXTRA_TWEET_ID);
 
             app = TweetApp.getApp();
             tweetList = app.tweetList;
@@ -78,8 +71,7 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
             super.onCreateView(inflater,  parent, savedInstanceState);
             View v = inflater.inflate(R.layout.fragment_tweeter, parent, false);
 
-            Tweeter tweeter = (Tweeter) getActivity();
-            tweeter.actionBar.setDisplayHomeAsUpEnabled(true);
+            setHasOptionsMenu(true);
 
             counter = (TextView) v.findViewById(R.id.counter);
 
@@ -152,7 +144,6 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
             {
                 case REQUEST_CONTACT:
                     String name = ContactHelper.getContact(getActivity(), data);
-                    app.currentUser.firstName = name;
                     emailAddress = ContactHelper.getEmail(getActivity(), data);
                     break;
             }
@@ -166,7 +157,7 @@ public class TweetFragment extends Fragment implements OnCheckedChangeListener, 
         public void onTextChanged(CharSequence s, int start, int before, int count)
         {}
 
-        @Override
+       @Override
         public void afterTextChanged(Editable c)
         {
             int left = (count - c.length());

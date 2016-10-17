@@ -1,4 +1,4 @@
-package app.ari.assignment1.views;
+package app.ari.assignment1.activities;
 
         import java.util.ArrayList;
 
@@ -7,6 +7,7 @@ package app.ari.assignment1.views;
         import app.ari.assignment1.app.TweetApp;
         import app.ari.assignment1.models.TweetList;
         import app.ari.assignment1.models.Tweet;
+        import app.ari.assignment1.settings.SettingsActivity;
 
         import android.view.ActionMode;
         import android.widget.AbsListView;
@@ -27,8 +28,6 @@ package app.ari.assignment1.views;
         import android.support.v4.app.ListFragment;
         import android.widget.AdapterView.OnItemClickListener;
         import android.widget.Toast;
-
-        import static app.ari.assignment1.helper.Helper.startActivityWithDataForResults;
 
 /**
  * Created by ictskills on 10/10/16.
@@ -70,8 +69,8 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Tweet tweet = ((TweetAdapter) getListAdapter()).getItem(position);
-        Intent i = new Intent(getActivity(), Tweeter.class);
-        i.putExtra(TweetFragment.EXTRA_TWEET_ID, tweet.id);
+        Intent i = new Intent(getActivity(), TweeterPager.class);
+        i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet.id);
         startActivityForResult(i, 0);
     }
 
@@ -91,8 +90,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-                Toast toast = Toast.makeText(getActivity(), "Setting pressed", Toast.LENGTH_SHORT);
-                toast.show();
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             case R.id.clear:
                 TweetList.tweets.clear();
@@ -101,8 +99,8 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
             case R.id.newTweet:
                 Tweet tweet = new Tweet();
                 TweetList.addTweet(tweet);
-                Intent i = new Intent(getActivity(), Tweeter.class);
-                i.putExtra(TweetFragment.EXTRA_TWEET_ID, tweet.id);
+                Intent i = new Intent(getActivity(), TweeterPager.class);
+                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet.id);
                 startActivityForResult(i, 0);
                 return true;
         }
@@ -113,7 +111,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Tweet tweet = adapter.getItem(position);
-        Helper.startActivityWithData(getActivity(), Tweeter.class, TweetFragment.EXTRA_TWEET_ID, tweet.id);
+        Helper.startActivityWithData(getActivity(), Tweeter.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
     }
 
     @Override
