@@ -8,10 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import app.ari.assignment1.R;
 
 /**
- * Created by ictskills on 03/10/16.
+ * Created by Ari on 03/10/16.
  */
 public class Timeline extends AppCompatActivity {
 
+    /**
+     * Loads these when the activity is opened
+     * loads a new TimelineFragment, where all the functionality of the timeline is.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

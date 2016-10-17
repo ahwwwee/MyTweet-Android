@@ -17,18 +17,29 @@ import java.io.Writer;
 import java.util.ArrayList;
 
 /**
- * Created by ictskills on 04/10/16.
+ * Created by Ari on 04/10/16.
  */
 public class TweetListSerializer {
 
     private Context tContext;
     private String tFilename;
 
+    /**
+     * constructor for tweetListSerializer
+     * @param c
+     * @param f
+     */
     public TweetListSerializer(Context c, String f){
         tContext = c;
         tFilename = f;
     }
 
+    /**
+     * saves tweets, allowing them to persist after closing the app.
+     * @param tweets
+     * @throws JSONException
+     * @throws IOException
+     */
     public void saveTweet(ArrayList<Tweet> tweets) throws JSONException, IOException{
         JSONArray array = new JSONArray();
         for(Tweet t : tweets){
@@ -48,6 +59,12 @@ public class TweetListSerializer {
         }
     }
 
+    /**
+     * reloads the tweets when the app is reopened
+     * @return
+     * @throws JSONException
+     * @throws IOException
+     */
     public ArrayList<Tweet> loadTweets() throws JSONException, IOException{
         ArrayList<Tweet> tweets = new ArrayList<>();
         BufferedReader reader = null;

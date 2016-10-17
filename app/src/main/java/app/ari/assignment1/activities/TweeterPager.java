@@ -24,6 +24,10 @@ public class TweeterPager extends AppCompatActivity {
     private TweetList tweetList;
     private ViewPager viewPager;
 
+    /**
+     * Loads these when the activity is opened
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -58,6 +62,9 @@ public class TweeterPager extends AppCompatActivity {
         }
     }
 
+    /**
+     * populated the pagerAdapter which allows the user to scroll through the tweets
+     */
     class PagerAdapter extends FragmentStatePagerAdapter
     {
         private ArrayList<Tweet>  tweets;

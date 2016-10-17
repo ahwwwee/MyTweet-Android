@@ -12,7 +12,7 @@ import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
 
 /**
- * Created by ictskills on 27/09/16.
+ * Created by Ari on 27/09/16.
  */
 public class Signup extends AppCompatActivity implements View.OnClickListener{
 
@@ -22,6 +22,10 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
     EditText password;
     private TweetApp app;
 
+    /**
+     * Loads these when the activity is opened
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +42,11 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
         button.setOnClickListener(this);
     }
 
+    /**
+     * OnClickListener method
+     * When a button is pressed this method is listening and will be invoked.
+     * @param view
+     */
     @Override
     public void onClick(View view) {
 

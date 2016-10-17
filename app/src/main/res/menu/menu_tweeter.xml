@@ -3,19 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".app.ari.Assignment1">
 
-    <item android:id="@+id/newTweet"
-        android:icon="@android:drawable/ic_menu_add"
-        app:showAsAction="ifRoom|withText"/>
-
-
     <item
         android:id="@+id/settings"
         android:orderInCategory="100"
         app:showAsAction="never"
         android:title="@string/settings"/>
-
-    <item android:id="@+id/clear"
-        android:orderInCategory="100"
-        android:title="@string/clear"/>
 
 </menu>

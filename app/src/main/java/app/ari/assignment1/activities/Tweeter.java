@@ -9,11 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import app.ari.assignment1.R;
 
 /**
- * Created by ictskills on 27/09/16.
+ * Created by Ari on 27/09/16.
  */
 public class Tweeter extends AppCompatActivity{
 
     public ActionBar actionBar;
+
+    /**
+     * Loads these when the activity is opened
+     * Loads a new TweetetFragment where the functionality for the Tweeter page is.
+     * @param savedInstanceState
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -28,5 +33,5 @@ public class Tweeter extends AppCompatActivity{
             fragment = new TweeterFragment();
             manager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
         }
-    }
+    }*/
 }

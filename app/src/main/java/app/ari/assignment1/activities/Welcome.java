@@ -9,8 +9,15 @@ import android.widget.Button;
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
 
+/**
+ * Created by Ari on 27/09/16.
+ */
 public class Welcome extends AppCompatActivity implements View.OnClickListener {
 
+    /**
+     * Loads these when the activity is opened
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +32,10 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
         signButton.setOnClickListener(this);
     }
 
+    /**
+     * When a button is pressed this is invokes, the switch brings the user to the appropriate activity
+     * @param view
+     */
     @Override
     public void onClick(View view) {
        switch(view.getId()){

@@ -2,12 +2,12 @@ package app.ari.assignment1.activities;
 
         import java.util.ArrayList;
 
+        import app.ari.assignment1.activities.settings.SettingsActivity;
         import app.ari.assignment1.helper.Helper;
         import app.ari.assignment1.R;
         import app.ari.assignment1.app.TweetApp;
         import app.ari.assignment1.models.TweetList;
         import app.ari.assignment1.models.Tweet;
-        import app.ari.assignment1.settings.SettingsActivity;
 
         import android.view.ActionMode;
         import android.widget.AbsListView;
@@ -27,10 +27,9 @@ package app.ari.assignment1.activities;
         import android.os.Bundle;
         import android.support.v4.app.ListFragment;
         import android.widget.AdapterView.OnItemClickListener;
-        import android.widget.Toast;
 
 /**
- * Created by ictskills on 10/10/16.
+ * Created by Ari on 10/10/16.
  */
 public class TimelineFragment extends ListFragment implements OnItemClickListener, AbsListView.MultiChoiceModeListener {
     private ArrayList<Tweet> tweets;
@@ -39,6 +38,10 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     TweetApp app;
     public ListView timeline;
 
+    /**
+     * Loads these when the activity is opened
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,14 +51,17 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         app = TweetApp.getApp();
         tweetList = app.tweetList;
         tweets = tweetList.tweets;
-
-
-
         adapter = new TweetAdapter(getActivity(), tweets);
         setListAdapter(adapter);
 
     }
 
+    /**
+     * Loads these when the activity is opened
+     * loads the items on the page so that they are readable in other methods.
+     * needs to be used when fragments are implemented
+     * @param savedInstanceState
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, parent, savedInstanceState);
@@ -66,6 +72,13 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         return v;
     }
 
+    /**
+     * Listening to when an individual item on the ListView has been clicked, Opens up a Tweeter page to view the tweet
+     * @param l
+     * @param v
+     * @param position
+     * @param id
+     */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Tweet tweet = ((TweetAdapter) getListAdapter()).getItem(position);
@@ -74,18 +87,31 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         startActivityForResult(i, 0);
     }
 
+    /**
+     * when this activity is reopened this method is invoked refreshes list.
+     */
     @Override
     public void onResume() {
         super.onResume();
         ((TweetAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
+    /**
+     * populates menu bar on this activity
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_tweeter, menu);
+        inflater.inflate(R.menu.menu_timeline, menu);
     }
 
+    /**
+     * For menu Items, If the any options in the menu is selected or the + button clicked.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -108,6 +134,13 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Opens new Tweeter class with clicked on tweet
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Tweet tweet = adapter.getItem(position);
@@ -119,6 +152,12 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
 
     }
 
+    /**
+     * for long hold tweet delete. points to appropriate menu.
+     * @param actionMode
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
         MenuInflater inflater = actionMode.getMenuInflater();
@@ -131,6 +170,12 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         return false;
     }
 
+    /**
+     * action listener for delete tweet.
+     * @param actionMode
+     * @param menuItem
+     * @return
+     */
     @Override
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -146,6 +191,10 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
 
     }
 
+    /**
+     * method to delete tweet from arrays
+     * @param actionMode
+     */
     public void deleteTweet(ActionMode actionMode) {
         for (int i = adapter.getCount() - 1; i >= 0; i--) {
             if (timeline.isItemChecked(i)) {
@@ -157,6 +206,9 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     }
 }
 
+       /**
+        * a helper class to populate list view with arrays·
+        */
         class TweetAdapter extends ArrayAdapter<Tweet> {
             private Context context;
 

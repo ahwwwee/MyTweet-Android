@@ -13,6 +13,13 @@ public class User {
     public String password;
     public String email;
 
+    /**
+     * constructor for a User
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param password
+     */
     public User(String firstName, String lastName, String email, String password){
         this.firstName = firstName;
         this.lastName = lastName;

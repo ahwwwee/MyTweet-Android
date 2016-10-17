@@ -1,4 +1,4 @@
-package app.ari.assignment1.settings;
+package app.ari.assignment1.activities.settings;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

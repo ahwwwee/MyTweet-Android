@@ -9,7 +9,7 @@ import app.ari.assignment1.models.User;
 import app.ari.assignment1.models.TweetList;
 
 /**
- * Created by ictskills on 27/09/16.
+ * Created by Ari on 27/09/16.
  */
 public class TweetApp extends Application {
     public ArrayList<User> users = new ArrayList<>();
@@ -18,6 +18,9 @@ public class TweetApp extends Application {
     public User currentUser;
     protected static TweetApp app;
 
+    /**
+     * Loads these when the application is opened
+     */
     @Override
     public void onCreate(){
         super.onCreate();
@@ -26,10 +29,20 @@ public class TweetApp extends Application {
         app = this;
     }
 
+    /**
+     * adds a user to the arraylist.
+     * @param user
+     */
     public void addUser(User user){
         users.add(user);
     }
 
+    /**
+     * verifying that a users email and password match
+     * @param email
+     * @param password
+     * @return
+     */
     public boolean findByEmail(String email, String password){
         for(User u : users){
             if(email.equals(u.email) && password.equals(u.password)){
@@ -40,6 +53,10 @@ public class TweetApp extends Application {
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     public static TweetApp getApp(){
         return app;
     }

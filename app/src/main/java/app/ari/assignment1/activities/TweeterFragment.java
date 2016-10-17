@@ -2,15 +2,16 @@ package app.ari.assignment1.activities;
 
 import java.util.Date;
 
+import app.ari.assignment1.activities.settings.SettingsActivity;
 import app.ari.assignment1.helper.ContactHelper;
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.models.TweetList;
 import app.ari.assignment1.models.Tweet;
-import app.ari.assignment1.settings.SettingsActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -34,7 +35,7 @@ import static app.ari.assignment1.helper.ContactHelper.sendEmail;
 import static app.ari.assignment1.helper.Helper.navigateUp;
 
 /**
- * Created by ictskills on 10/10/16.
+ * Created by Ari on 10/10/16.
  */
 public class TweeterFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher {
 
@@ -55,6 +56,10 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public TweetApp app;
     public String contactName;
 
+    /**
+     * Loads these when the activity is opened
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -68,13 +73,17 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         tweet = tweetList.getTweet(tweetId);
     }
 
+    /**
+     * Loads these when the activity is opened
+     * loads the items on the page so that they are readable in other methods.
+     * needs to be used when fragments are implemented
+     * @param savedInstanceState
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState)
     {
         super.onCreateView(inflater,  parent, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_tweeter, parent, false);
-
-        setHasOptionsMenu(true);
 
         counter = (TextView) v.findViewById(R.id.counter);
 
@@ -89,7 +98,11 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
 
         return v;
     }
-    public Tweet editTweet;
+
+    /**
+     * adds listeners to buttons and textWatcher
+     * @param v
+     */
     private void addListeners(View v)
     {
         tweetButton = (Button) v.findViewById(R.id.tweetButton);
@@ -104,6 +117,10 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
 
     }
 
+    /**
+     * If tweet an old tweet is being viewed on this page this method is invoked
+     * @param tweet
+     */
     public void updateControls(Tweet tweet)
     {
         tweetTweet.setText(tweet.content);
@@ -111,6 +128,11 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         tweetTweet.setEnabled(false);
     }
 
+    /**
+     * For menu Items, If the up button is pressed or if the settings in the menu is selected.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -135,6 +157,9 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         }
     }
 
+    /**
+     * when the activity is exited the array in tweetlist is saved, making it persistant
+     */
     @Override
     public void onPause()
     {
@@ -142,6 +167,12 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         tweetList.saveTweets();
     }
 
+    /**
+     * a method to access the contacts for emailing a tweet.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -168,12 +199,24 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public void onTextChanged(CharSequence s, int start, int before, int count)
     {}
 
+    /**
+     * a method taken from the TextWatcher, used to invoke the counter.
+     * sets color as the counter goes below 10.
+     * @param c
+     */
     @Override
     public void afterTextChanged(Editable c)
     {
         int left = (count - c.length());
         charLeftString = Integer.toString(left);
-        counter.setText(charLeftString);
+        if(left > 10){
+            counter.setTextColor(Color.parseColor("#161803"));
+            counter.setText(charLeftString);
+        }
+        else if(left <= 10) {
+            counter.setTextColor(Color.parseColor("#F6402C"));
+            counter.setText(charLeftString);
+        }
     }
 
     @Override
@@ -181,12 +224,22 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     {
     }
 
+    /**
+     * populates menu on this activity
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_tweeter, menu);
     }
 
+    /**
+     * OnClickListener method
+     * When a button is pressed this method is listening and will be invoked.
+     * @param v
+     */
     @Override
     public void onClick(View v)
     {

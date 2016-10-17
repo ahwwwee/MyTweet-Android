@@ -8,27 +8,16 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 
 /**
- * Created by ictskills on 04/10/16.
+ * Created by Ari on 04/10/16.
  */
 public class ContactHelper {
 
-    public static String getDisplayName(Context context, Intent data){
-        String contact = "Unable to find contact";
-        Uri contactUri = data.getData();
-
-        String[] queryFields = new String[] {ContactsContract.Contacts.DISPLAY_NAME};
-        Cursor c = context.getContentResolver().query(contactUri, queryFields, null, null, null);
-        if(c.getCount() == 0){
-            c.close();
-            return contact;
-        }
-        c.moveToFirst();
-        contact = c.getString(0);
-        c.close();
-
-        return contact;
-    }
-
+    /**
+     * extracts email from phones contacts
+     * @param context
+     * @param data
+     * @return
+     */
     public static String getEmail(Context context, Intent data){
         String email = "no email";
         Uri contactUri = data.getData();
@@ -50,6 +39,12 @@ public class ContactHelper {
         return email;
     }
 
+    /**
+     * Get contacts name from contacts.
+     * @param context
+     * @param data
+     * @return
+     */
     public static String getContact(Context context, Intent data){
         String contact = "unable to find contact";
         Uri contactUri = data.getData();
@@ -66,6 +61,13 @@ public class ContactHelper {
         return contact;
     }
 
+    /**
+     * Send the email using a 3rd party app on the users device
+     * @param context
+     * @param email
+     * @param subject
+     * @param body
+     */
     public static void sendEmail(Context context, String email, String subject, String body){
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
