@@ -155,6 +155,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
             case REQUEST_CONTACT:
                 String name = ContactHelper.getContact(getActivity(), data);
                 emailAddress = ContactHelper.getEmail(getActivity(), data);
+                selectContact.setText(emailAddress);
                 break;
         }
     }
@@ -205,7 +206,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
             case (R.id.selectContact):
                 Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(i, REQUEST_CONTACT);
-                selectContact.setText(emailAddress);
                 break;
             case (R.id.emailTweet):
                 if(emailAddress.equals("")){

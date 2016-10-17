@@ -1,5 +1,8 @@
 package app.ari.assignment1.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by ictskills on 27/09/16.
  */
