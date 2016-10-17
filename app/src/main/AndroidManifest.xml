@@ -30,7 +30,7 @@
             android:label="@string/settings" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Timeline"/>
+                android:value="app.ari.assignment1.activities.Timeline"/>
         </activity>
     </application>
 </manifest>
