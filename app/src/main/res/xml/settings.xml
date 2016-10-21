@@ -4,13 +4,15 @@
     <EditTextPreference
         android:key="username"
         android:summary="@string/username_summary"
-        android:title="@string/username"/>
+        android:title="@string/username"
+        android:defaultValue=""/>
 
     <EditTextPreference
         android:key="password"
         android:summary="@string/password_summary"
         android:title="@string/password"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:defaultValue=""/>
 
     <EditTextPreference
         android:key="nmr_tweets"

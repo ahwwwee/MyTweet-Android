@@ -8,6 +8,7 @@ package app.ari.assignment1.activities;
         import app.ari.assignment1.app.TweetApp;
         import app.ari.assignment1.models.TweetList;
         import app.ari.assignment1.models.Tweet;
+        import app.ari.assignment1.models.User;
 
         import android.view.ActionMode;
         import android.widget.AbsListView;
@@ -34,9 +35,11 @@ package app.ari.assignment1.activities;
 public class TimelineFragment extends ListFragment implements OnItemClickListener, AbsListView.MultiChoiceModeListener {
     private ArrayList<Tweet> tweets;
     private TweetList tweetList;
+    private TextView welcome;
     private TweetAdapter adapter;
     TweetApp app;
     public ListView timeline;
+    private User user;
 
     /**
      * Loads these when the activity is opened
@@ -73,7 +76,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     }
 
     /**
-     * Listening to when an individual item on the ListView has been clicked, Opens up a Tweeter page to view the tweet
+     * Listening to when an individual item on the ListView has been clicked, Opens up a TweeterPager, and then a TweeterFragment page to view the tweet
      * @param l
      * @param v
      * @param position
@@ -135,16 +138,17 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     }
 
     /**
-     * Opens new Tweeter class with clicked on tweet
+     * Opens new TweeterPager,then TweeterFragment class with clicked on tweet
      * @param parent
      * @param view
      * @param position
-     * @param id
+     * @param id Tweet tweet = adapter.getItem(position);
+        Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Tweet tweet = adapter.getItem(position);
-        Helper.startActivityWithData(getActivity(), Tweeter.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+        Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
     }
 
     @Override
@@ -234,4 +238,4 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
 
                 return convertView;
             }
-        }
+       }

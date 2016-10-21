@@ -5,14 +5,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
+import app.ari.assignment1.models.User;
 
 /**
  * Created by Ari on 27/09/16.
  */
 public class Welcome extends AppCompatActivity implements View.OnClickListener {
+
+    private User user;
 
     /**
      * Loads these when the activity is opened
@@ -23,13 +27,15 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        TweetApp app = (TweetApp) getApplication();
-
         Button logButton = (Button) findViewById(R.id.login_button);
         Button signButton = (Button) findViewById(R.id.signup_button);
 
         logButton.setOnClickListener(this);
         signButton.setOnClickListener(this);
+    }
+
+    public void onCreateView(View v){
+
     }
 
     /**

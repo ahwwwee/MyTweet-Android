@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by ictskills on 27/09/16.
+ * Created by Ari on 27/09/16.
  */
 public class User {
 

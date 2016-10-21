@@ -8,6 +8,7 @@ import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.models.TweetList;
 import app.ari.assignment1.models.Tweet;
+import app.ari.assignment1.models.User;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -54,7 +55,8 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     private String charLeftString;
     private String tweetMessage = " ";
     public TweetApp app;
-    public String contactName;
+    private User user;
+    TextView welcome;
 
     /**
      * Loads these when the activity is opened
@@ -69,6 +71,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         Long tweetId = (Long)getArguments().getSerializable(EXTRA_TWEET_ID);
 
         app = TweetApp.getApp();
+        user = app.currentUser;
         tweetList = app.tweetList;
         tweet = tweetList.getTweet(tweetId);
     }
@@ -84,6 +87,9 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     {
         super.onCreateView(inflater,  parent, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_tweeter, parent, false);
+
+        welcome = (TextView) v.findViewById(R.id.welcome);
+        welcome.setText("Hey " + user.firstName);
 
         counter = (TextView) v.findViewById(R.id.counter);
 
