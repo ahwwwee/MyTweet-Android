@@ -33,7 +33,7 @@ public class TweetApp extends Application {
 
     public TweetService tweetService;
     public boolean tweetServiceAvailable = false;
-    public String service_url  = "https://mytweet-ari.herokuapp.com/";
+    public String service_url  = "https://mytweet-ari.herokuapp.com";
 
 
     /**

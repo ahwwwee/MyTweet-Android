@@ -48,8 +48,8 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     {
         super.onResume();
         app.currentUser = null;
-        Call<List<User>> call1 = (Call<List<User>>) app.tweetService.getAllUsers();
-        call1.enqueue(this);
+        Call<List<User>> call = (Call<List<User>>) app.tweetService.getAllUsers();
+        call.enqueue(this);
     }
 
     public void onCreateView(View v){
@@ -64,10 +64,18 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     public void onClick(View view) {
        switch(view.getId()){
            case R.id.login_button:
-               startActivity(new Intent(this, Login.class));
+               if(app.tweetServiceAvailable) {
+                   startActivity(new Intent(this, Login.class));
+                   break;
+               }
+               serviceUnavailableMessage();
                break;
            case R.id.signup_button:
-               startActivity(new Intent(this, Signup.class));
+               if(app.tweetServiceAvailable) {
+                   startActivity(new Intent(this, Signup.class));
+                   break;
+               }
+               serviceUnavailableMessage();
                break;
        }
     }
