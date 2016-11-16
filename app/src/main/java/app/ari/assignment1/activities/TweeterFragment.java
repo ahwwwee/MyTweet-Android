@@ -1,6 +1,7 @@
 package app.ari.assignment1.activities;
 
 import java.util.Date;
+import java.util.List;
 
 import app.ari.assignment1.activities.settings.SettingsActivity;
 import app.ari.assignment1.helper.ContactHelper;
@@ -9,6 +10,9 @@ import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.models.TweetList;
 import app.ari.assignment1.models.Tweet;
 import app.ari.assignment1.models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -38,7 +42,7 @@ import static app.ari.assignment1.helper.Helper.navigateUp;
 /**
  * Created by Ari on 10/10/16.
  */
-public class TweeterFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher {
+public class TweeterFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher, Callback<Tweet> {
 
     public static   final String  EXTRA_TWEET_ID = "TWEET_ID";
     private static  final int REQUEST_CONTACT = 1;
@@ -170,7 +174,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public void onPause()
     {
         super.onPause();
-        tweetList.saveTweets();
+
     }
 
     /**
@@ -259,6 +263,9 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                 }
                 else{
                     tweet.content = tweetMessage;
+                    tweetList.saveTweets();
+                    Call<Tweet> call = (Call<Tweet>) app.tweetService.createTweet(app.currentUser._id, tweet);
+                    call.enqueue(this);
                 }
                 startActivity(new Intent(getActivity(), Timeline.class));
                 break;
@@ -274,6 +281,16 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                 sendEmail(getActivity(), emailAddress, app.currentUser.firstName + " has sent you a tweet", tweetMessage);
                 break;
         }
+    }
+
+    @Override
+    public void onResponse(Call<Tweet> call, Response<Tweet> response) {
+
+    }
+
+    @Override
+    public void onFailure(Call<Tweet> call, Throwable t) {
+
     }
 }
 

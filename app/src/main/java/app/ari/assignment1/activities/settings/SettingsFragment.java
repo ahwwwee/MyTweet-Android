@@ -88,7 +88,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 Tweet tweet = new Tweet();
                 TweetList.addTweet(tweet);
                 Intent i = new Intent(getActivity(), TweeterPager.class);
-                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
                 startActivityForResult(i, 0);
                 return true;
             default:

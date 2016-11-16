@@ -6,20 +6,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import app.ari.assignment1.models.User;
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ari on 27/09/16.
  */
-public class Signup extends AppCompatActivity implements View.OnClickListener{
+public class Signup extends AppCompatActivity implements View.OnClickListener, Callback<User> {
 
-    EditText firstName;
-    EditText lastName;
-    EditText email;
-    EditText password;
+    private EditText firstName;
+    private EditText lastName;
+    private EditText email;
+    private EditText password;
+    private Button button;
     private TweetApp app;
 
     /**
@@ -37,7 +42,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
         lastName = (EditText) findViewById(R.id.lastName);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
-        Button button = (Button) findViewById(R.id.register);
+        button = (Button) findViewById(R.id.register);
 
         button.setOnClickListener(this);
     }
@@ -55,9 +60,34 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
         String Email = this.email.getText().toString();
         String Password = this.password.getText().toString();
 
-        User user = new User(FirstName, LastName, Email, Password);
-        app.addUser(user);
+        if (isEmailValid(Email)) {
+            User user = new User(FirstName, LastName, Email, Password);
+            app.addUser(user);
 
-        startActivity(new Intent(this, Login.class));
+            Call<User> call = (Call<User>) app.tweetService.createUser(user);
+            call.enqueue(this);
+
+            startActivity(new Intent(this, Login.class));
+        }
+        Toast toast = Toast.makeText(this, "Email address must be valid", Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    public boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    @Override
+    public void onResponse(Call<User> call, Response<User> response) {
+        app.users.add(response.body());
+        startActivity(new Intent(this, Welcome.class));
+    }
+
+    @Override
+    public void onFailure(Call<User> call, Throwable t) {
+        app.tweetServiceAvailable = false;
+        Toast toast = Toast.makeText(this, "Tweet Service Unavailable. Try again later", Toast.LENGTH_LONG);
+        toast.show();
+        startActivity (new Intent(this, Welcome.class));
     }
 }

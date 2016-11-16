@@ -56,7 +56,7 @@ public class TweetList {
      */
     public Tweet getTweet(Long id){
         for(Tweet t : tweets){
-            if(id.equals(t.id)){
+            if(id.equals(t._id)){
                 return t;
             }
         }

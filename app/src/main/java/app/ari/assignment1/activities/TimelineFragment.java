@@ -1,33 +1,37 @@
 package app.ari.assignment1.activities;
 
-        import java.util.ArrayList;
+import java.util.ArrayList;
+import java.util.List;
 
-        import app.ari.assignment1.activities.settings.SettingsActivity;
-        import app.ari.assignment1.helper.Helper;
-        import app.ari.assignment1.R;
-        import app.ari.assignment1.app.TweetApp;
-        import app.ari.assignment1.models.TweetList;
-        import app.ari.assignment1.models.Tweet;
-        import app.ari.assignment1.models.User;
+import app.ari.assignment1.activities.settings.SettingsActivity;
+import app.ari.assignment1.helper.Helper;
+import app.ari.assignment1.R;
+import app.ari.assignment1.app.TweetApp;
+import app.ari.assignment1.models.TweetList;
+import app.ari.assignment1.models.Tweet;
+import app.ari.assignment1.models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-        import android.view.ActionMode;
-        import android.widget.AbsListView;
-        import android.widget.ListView;
-        import android.view.LayoutInflater;
-        import android.view.Menu;
-        import android.view.MenuInflater;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.ArrayAdapter;
-        import android.view.ViewGroup;
-        import android.widget.AdapterView;
-        import android.widget.TextView;
-        import android.annotation.SuppressLint;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.support.v4.app.ListFragment;
-        import android.widget.AdapterView.OnItemClickListener;
+import android.view.ActionMode;
+import android.widget.AbsListView;
+import android.widget.ListView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * Created by Ari on 10/10/16.
@@ -69,6 +73,21 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, parent, savedInstanceState);
 
+        Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getAllTweets();
+        call.enqueue(new Callback<List<Tweet>>() {
+            @Override
+            public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
+                for(Tweet t :response.body()){
+                    app.tweets.add(t);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Tweet>> call, Throwable t) {
+                app.tweetServiceAvailable = false;
+            }
+        });
+
         timeline = (ListView) v.findViewById(android.R.id.list);
         timeline.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         timeline.setMultiChoiceModeListener(this);
@@ -86,7 +105,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     public void onListItemClick(ListView l, View v, int position, long id) {
         Tweet tweet = ((TweetAdapter) getListAdapter()).getItem(position);
         Intent i = new Intent(getActivity(), TweeterPager.class);
-        i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+        i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
         startActivityForResult(i, 0);
     }
 
@@ -97,6 +116,10 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     public void onResume() {
         super.onResume();
         ((TweetAdapter) getListAdapter()).notifyDataSetChanged();
+    }
+
+    public void onBackPressed(){
+        getActivity().finish();
     }
 
     /**
@@ -128,8 +151,9 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
             case R.id.newTweet:
                 Tweet tweet = new Tweet();
                 TweetList.addTweet(tweet);
+                app.DBhelper.addTweet(tweet);
                 Intent i = new Intent(getActivity(), TweeterPager.class);
-                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
                 startActivityForResult(i, 0);
                 return true;
         }
@@ -148,7 +172,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Tweet tweet = adapter.getItem(position);
-        Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+        Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet._id);
     }
 
     @Override
