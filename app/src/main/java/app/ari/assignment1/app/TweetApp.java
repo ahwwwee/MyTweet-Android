@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TweetApp extends Application {
     public List<User> users = new ArrayList<User>();
     public List<Tweet> tweets = new ArrayList<Tweet>();
-    private static final String FILENAME = "portfolio.json";
+    private static final String FILENAME = "TweetList.json";
     public TweetList tweetList;
     public User currentUser;
     protected static TweetApp app;

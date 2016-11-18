@@ -39,6 +39,10 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
         Button signButton = (Button) findViewById(R.id.signup_button);
 
         app = TweetApp.getApp();
+        Call<List<User>> call = (Call<List<User>>) app.tweetService.getAllUsers();
+        call.enqueue(this);
+
+        app.currentUser = null;
         logButton.setOnClickListener(this);
         signButton.setOnClickListener(this);
     }
@@ -47,9 +51,7 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     public void onResume()
     {
         super.onResume();
-        app.currentUser = null;
-        Call<List<User>> call = (Call<List<User>>) app.tweetService.getAllUsers();
-        call.enqueue(this);
+
     }
 
     public void onCreateView(View v){

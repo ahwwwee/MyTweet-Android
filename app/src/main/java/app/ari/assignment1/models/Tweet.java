@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class Tweet {
 
-    public Long _id;
+    public String _id;
     public String date;
     public String content;
 
@@ -23,7 +23,6 @@ public class Tweet {
      * constructor for a new tweet
      */
     public Tweet(){
-        _id = Math.abs(new Random().nextLong());
         date = new Date().toString();
     }
 
@@ -33,7 +32,7 @@ public class Tweet {
      * @throws JSONException
      */
     public Tweet(JSONObject json) throws JSONException{
-        _id = json.getLong(JSON_ID);
+        _id = json.getString(JSON_ID);
         content = json.getString(JSON_CONTENT);
         date = json.getString(JSON_DATE);
     }
@@ -45,7 +44,7 @@ public class Tweet {
      */
     public JSONObject toJSON() throws JSONException{
         JSONObject json = new JSONObject();
-        json.put(JSON_ID, Long.toString(_id));
+        json.put(JSON_ID, _id);
         json.put(JSON_CONTENT, content);
         json.put(JSON_DATE, date);
         return json;

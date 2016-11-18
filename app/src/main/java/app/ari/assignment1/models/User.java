@@ -10,11 +10,11 @@ import java.util.Random;
  */
 public class User {
 
+    public String _id;
     public String firstName;
     public String lastName;
-    public String password;
     public String email;
-    public Long _id;
+    public String password;
 
     /**
      * constructor for a User
@@ -24,7 +24,6 @@ public class User {
      * @param password
      */
     public User(String firstName, String lastName, String email, String password){
-        _id = Math.abs(new Random().nextLong());
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

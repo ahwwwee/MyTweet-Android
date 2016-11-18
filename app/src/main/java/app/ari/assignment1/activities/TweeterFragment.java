@@ -77,7 +77,12 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         app = TweetApp.getApp();
         user = app.currentUser;
         tweetList = app.tweetList;
-        tweet = tweetList.getTweet(tweetId);
+        if(tweetId != null) {
+            tweet = tweetList.getTweet(tweetId);
+            if(!tweet.content.isEmpty()){
+                updateControls(tweet);
+            }
+        }
     }
 
     /**
@@ -102,9 +107,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         date.setText(today);
 
         addListeners(v);
-        if(tweet.content != null){
-            updateControls(tweet);
-        }
 
         return v;
     }

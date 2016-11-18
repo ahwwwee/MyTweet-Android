@@ -58,7 +58,7 @@ public class DBhelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(PRIMARY_KEY, tweet._id.toString());
+        values.put(PRIMARY_KEY, tweet._id);
         values.put(CONTENT, tweet.content);
         // Insert record
         db.insert(TABLE_TWEET, null, values);
@@ -78,7 +78,7 @@ public class DBhelper extends SQLiteOpenHelper {
             if (cursor.getCount() > 0) {
                 int columnIndex = 0;
                 cursor.moveToFirst();
-                tweet._id = cursor.getLong(columnIndex++);
+                tweet._id = cursor.getString(columnIndex++);
                 tweet.content = cursor.getString(columnIndex++);
             }
         } finally {

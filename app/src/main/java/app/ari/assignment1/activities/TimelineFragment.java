@@ -36,7 +36,7 @@ import android.widget.AdapterView.OnItemClickListener;
 /**
  * Created by Ari on 10/10/16.
  */
-public class TimelineFragment extends ListFragment implements OnItemClickListener, AbsListView.MultiChoiceModeListener {
+public class TimelineFragment extends ListFragment implements OnItemClickListener, AbsListView.MultiChoiceModeListener, Callback<Tweet> {
     private ArrayList<Tweet> tweets;
     private TweetList tweetList;
     private TextView welcome;
@@ -44,6 +44,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     TweetApp app;
     public ListView timeline;
     private User user;
+    private Tweet tweet;
 
     /**
      * Loads these when the activity is opened
@@ -149,7 +150,9 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
                 startActivity(new Intent(getActivity(), Timeline.class));
                 return true;
             case R.id.newTweet:
-                Tweet tweet = new Tweet();
+                tweet = new Tweet();
+                Call<Tweet> call = (Call<Tweet>) app.tweetService.createTweet(app.currentUser._id, tweet);
+                call.enqueue(this);
                 TweetList.addTweet(tweet);
                 app.DBhelper.addTweet(tweet);
                 Intent i = new Intent(getActivity(), TweeterPager.class);
@@ -231,6 +234,16 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         }
         actionMode.finish();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResponse(Call<Tweet> call, Response<Tweet> response) {
+        tweet = response.body();
+    }
+
+    @Override
+    public void onFailure(Call<Tweet> call, Throwable t) {
+        app.tweetServiceAvailable = false;
     }
 }
 

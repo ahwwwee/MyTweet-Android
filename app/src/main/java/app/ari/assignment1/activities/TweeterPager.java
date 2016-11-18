@@ -54,10 +54,12 @@ public class TweeterPager extends AppCompatActivity {
 
     private void setCurrentItem() {
         Long tweetId = (Long) getIntent().getSerializableExtra(TweeterFragment.EXTRA_TWEET_ID);
-        for (int i = 0; i < tweets.size(); i++) {
-            if (tweets.get(i)._id.equals(tweetId)) {
-                viewPager.setCurrentItem(i);
-                break;
+        if(tweetId != null) {
+            for (int i = 0; i < tweets.size(); i++) {
+                if (tweets.get(i)._id.equals(tweetId)) {
+                    viewPager.setCurrentItem(i);
+                    break;
+                }
             }
         }
     }

@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import app.ari.assignment1.models.User;
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
@@ -68,12 +71,13 @@ public class Signup extends AppCompatActivity implements View.OnClickListener, C
             call.enqueue(this);
 
             startActivity(new Intent(this, Login.class));
+        } else {
+            Toast toast = Toast.makeText(this, "Email address must be valid", Toast.LENGTH_LONG);
+            toast.show();
         }
-        Toast toast = Toast.makeText(this, "Email address must be valid", Toast.LENGTH_LONG);
-        toast.show();
     }
 
-    public boolean isEmailValid(CharSequence email) {
+    boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 

@@ -36,10 +36,10 @@ public interface TweetService {
     Call<List<Tweet>> getAllTweets();
 
     @GET("/api/tweets/{id}")
-    Call<Tweet> getTweet(@Path("id") Long id);
+    Call<Tweet> getTweet(@Path("id") String id);
 
     @POST("/api/users/{id}/tweets")
-    Call<Tweet> createTweet(@Path("id") Long id, @Body Tweet tweet);
+    Call<Tweet> createTweet(@Path("id") String id, @Body Tweet tweet);
 
     @DELETE("/api/tweets/{id}")
     Call<Tweet> deleteTweet(@Path("id") String id);
