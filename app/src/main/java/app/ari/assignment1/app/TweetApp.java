@@ -4,7 +4,6 @@ import android.app.Application;
 
 import java.util.ArrayList;
 
-import app.ari.assignment1.models.TweetListSerializer;
 import app.ari.assignment1.models.User;
 import app.ari.assignment1.models.TweetList;
 
@@ -24,8 +23,7 @@ public class TweetApp extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        TweetListSerializer serializer = new TweetListSerializer(this, FILENAME);
-        tweetList = new TweetList(serializer);
+        tweetList = new TweetList(getApplicationContext());
         app = this;
     }
 

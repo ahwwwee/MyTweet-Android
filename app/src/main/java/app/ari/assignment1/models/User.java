@@ -15,15 +15,7 @@ public class User {
 
     /**
      * constructor for a User
-     * @param firstName
-     * @param lastName
-     * @param email
-     * @param password
      */
-    public User(String firstName, String lastName, String email, String password){
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
+    public User(){
     }
 }

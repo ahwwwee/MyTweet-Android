@@ -34,12 +34,12 @@ package app.ari.assignment1.activities;
  */
 public class TimelineFragment extends ListFragment implements OnItemClickListener, AbsListView.MultiChoiceModeListener {
     private ArrayList<Tweet> tweets;
-    private TweetList tweetList;
     private TextView welcome;
     private TweetAdapter adapter;
     TweetApp app;
     public ListView timeline;
     private User user;
+    private TweetList tweetList;
 
     /**
      * Loads these when the activity is opened
@@ -86,7 +86,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     public void onListItemClick(ListView l, View v, int position, long id) {
         Tweet tweet = ((TweetAdapter) getListAdapter()).getItem(position);
         Intent i = new Intent(getActivity(), TweeterPager.class);
-        i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+        i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
         startActivityForResult(i, 0);
     }
 
@@ -127,9 +127,9 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
                 return true;
             case R.id.newTweet:
                 Tweet tweet = new Tweet();
-                TweetList.addTweet(tweet);
+                tweetList.addTweet(tweet);
                 Intent i = new Intent(getActivity(), TweeterPager.class);
-                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
                 startActivityForResult(i, 0);
                 return true;
         }
@@ -146,9 +146,9 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
      */
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, String id) {
         Tweet tweet = adapter.getItem(position);
-        Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+        Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet._id);
     }
 
     @Override

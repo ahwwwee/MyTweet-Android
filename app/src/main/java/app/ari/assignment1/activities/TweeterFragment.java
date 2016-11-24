@@ -68,7 +68,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        Long tweetId = (Long)getArguments().getSerializable(EXTRA_TWEET_ID);
+        String tweetId = (String)getArguments().getSerializable(EXTRA_TWEET_ID);
 
         app = TweetApp.getApp();
         user = app.currentUser;
@@ -170,7 +170,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public void onPause()
     {
         super.onPause();
-        tweetList.saveTweets();
+        //tweetList.saveTweets();
     }
 
     /**

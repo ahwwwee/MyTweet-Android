@@ -55,7 +55,11 @@ public class Signup extends AppCompatActivity implements View.OnClickListener{
         String Email = this.email.getText().toString();
         String Password = this.password.getText().toString();
 
-        User user = new User(FirstName, LastName, Email, Password);
+        User user = new User();
+        user.firstName = FirstName;
+        user.lastName = LastName;
+        user.email = Email;
+        user.password = Password;
         app.addUser(user);
 
         startActivity(new Intent(this, Login.class));

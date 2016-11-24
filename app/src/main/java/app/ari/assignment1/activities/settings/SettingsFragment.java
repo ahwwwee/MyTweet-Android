@@ -29,6 +29,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public EditTextPreference password;
     public User user;
     private TweetApp app;
+    private TweetList tweetList;
 
     /**
      * Loads these when the activity is opened
@@ -86,9 +87,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 return true;
             case R.id.newTweet:
                 Tweet tweet = new Tweet();
-                TweetList.addTweet(tweet);
+                tweetList.addTweet(tweet);
                 Intent i = new Intent(getActivity(), TweeterPager.class);
-                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
                 startActivityForResult(i, 0);
                 return true;
             default:
