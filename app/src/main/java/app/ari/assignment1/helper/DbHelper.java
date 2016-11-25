@@ -44,8 +44,8 @@ public class DbHelper extends SQLiteOpenHelper
         String tweetTable =
                 "CREATE TABLE tableTweets " +
                         "(_id text primary key, " +
-                        "date text," +
-                        "content text)";
+                        "content text," +
+                        "date text)";
         String userTable =
                 "CREATE TABLE tableUsers " +
                         "(_id text primary key, " +
@@ -66,8 +66,8 @@ public class DbHelper extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PRIMARY_KEY, tweet._id);
-        values.put(DATE, tweet.date);
         values.put(CONTENT, tweet.content);
+        values.put(DATE, tweet.date);
 
         // Insert record
         db.insert(TABLE_TWEETS, null, values);
@@ -75,7 +75,7 @@ public class DbHelper extends SQLiteOpenHelper
     }
 
     /**
-     * Persist a list of residences
+     * Persist a list of tweets
      *
      * @param tweets The list of Tweet object to be saved to database.
      */
@@ -85,7 +85,7 @@ public class DbHelper extends SQLiteOpenHelper
         }
     }
 
-    public Tweet selectResidence(String id) {
+    public Tweet selectTweets(String id) {
         Tweet tweet;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -112,7 +112,7 @@ public class DbHelper extends SQLiteOpenHelper
     public void deleteTweet(Tweet tweet) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
-            db.delete("tableTweets", "_id" + "=?", new String[]{tweet._id + ""});
+            db.delete("tableTweets", "_id" + "=?", new String[]{tweet._id});
         }
         catch (Exception e) {
             Log.d(TAG, "delete tweet failure: " + e.getMessage());
@@ -134,8 +134,8 @@ public class DbHelper extends SQLiteOpenHelper
             do {
                 Tweet tweet = new Tweet();
                 tweet._id = cursor.getString(columnIndex++);
-                tweet.date = cursor.getString(columnIndex++);
                 tweet.content = cursor.getString(columnIndex++);
+                tweet.date = cursor.getString(columnIndex++);
                 columnIndex = 0;
 
                 tweets.add(tweet);
@@ -181,12 +181,12 @@ public class DbHelper extends SQLiteOpenHelper
         try {
             ContentValues values = new ContentValues();
             values.put(PRIMARY_KEY, tweet._id);
-            values.put(DATE, tweet.date);
             values.put(CONTENT, tweet.content);
+            values.put(DATE, tweet.date);
             db.update("tableTweets", values, "_id" + "=?", new String[]{tweet._id});
         }
         catch (Exception e) {
-            Log.d(TAG, "update residences failure: " + e.getMessage());
+            Log.d(TAG, "update tweets failure: " + e.getMessage());
         }
     }
 

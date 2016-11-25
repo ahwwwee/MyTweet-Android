@@ -1,6 +1,8 @@
 package app.ari.assignment1.activities;
 
+        import java.lang.reflect.Array;
         import java.util.ArrayList;
+        import java.util.List;
 
         import app.ari.assignment1.activities.settings.SettingsActivity;
         import app.ari.assignment1.helper.Helper;
@@ -9,6 +11,9 @@ package app.ari.assignment1.activities;
         import app.ari.assignment1.models.TweetList;
         import app.ari.assignment1.models.Tweet;
         import app.ari.assignment1.models.User;
+        import retrofit2.Call;
+        import retrofit2.Callback;
+        import retrofit2.Response;
 
         import android.view.ActionMode;
         import android.widget.AbsListView;
@@ -33,7 +38,7 @@ package app.ari.assignment1.activities;
  * Created by Ari on 10/10/16.
  */
 public class TimelineFragment extends ListFragment implements OnItemClickListener, AbsListView.MultiChoiceModeListener {
-    private ArrayList<Tweet> tweets;
+    private List<Tweet> tweets;
     private TextView welcome;
     private TweetAdapter adapter;
     TweetApp app;
@@ -56,7 +61,6 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         tweets = tweetList.tweets;
         adapter = new TweetAdapter(getActivity(), tweets);
         setListAdapter(adapter);
-
     }
 
     /**
@@ -122,18 +126,20 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             case R.id.clear:
-                TweetList.tweets.clear();
+                for(Tweet t : tweetList.tweets){
+                    tweetList.deleteTweet(t);
+                }
                 startActivity(new Intent(getActivity(), Timeline.class));
                 return true;
             case R.id.newTweet:
                 Tweet tweet = new Tweet();
+                tweet._id = "123";
                 tweetList.addTweet(tweet);
                 Intent i = new Intent(getActivity(), TweeterPager.class);
                 i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
                 startActivityForResult(i, 0);
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -146,7 +152,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
      */
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, String id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Tweet tweet = adapter.getItem(position);
         Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet._id);
     }
@@ -216,7 +222,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         class TweetAdapter extends ArrayAdapter<Tweet> {
             private Context context;
 
-            public TweetAdapter(Context context, ArrayList<Tweet> tweets) {
+            public TweetAdapter(Context context, List<Tweet> tweets) {
                 super(context, 0, tweets);
                 this.context = context;
             }

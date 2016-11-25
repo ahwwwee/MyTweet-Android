@@ -9,6 +9,9 @@ import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.models.TweetList;
 import app.ari.assignment1.models.Tweet;
 import app.ari.assignment1.models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -38,7 +41,7 @@ import static app.ari.assignment1.helper.Helper.navigateUp;
 /**
  * Created by Ari on 10/10/16.
  */
-public class TweeterFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher {
+public class TweeterFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher, Callback<Tweet> {
 
     public static   final String  EXTRA_TWEET_ID = "TWEET_ID";
     private static  final int REQUEST_CONTACT = 1;
@@ -130,7 +133,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public void updateControls(Tweet tweet)
     {
         tweetTweet.setText(tweet.content);
-        date.setText(tweet.date.toString());
+        date.setText(tweet.date);
         tweetTweet.setEnabled(false);
     }
 
@@ -170,7 +173,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public void onPause()
     {
         super.onPause();
-        //tweetList.saveTweets();
+        tweetList.updateTweet(tweet);
     }
 
     /**
@@ -255,12 +258,17 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                 Toast toast = Toast.makeText(getActivity(), "Tweet Sent", Toast.LENGTH_SHORT);
                 toast.show();
                 if(tweetMessage.equals("")){
-                    TweetList.tweets.remove(tweet);
+                    tweetList.deleteTweet(tweet);
+                    Toast toasty = Toast.makeText(getActivity(), "Tweet must have some content", Toast.LENGTH_SHORT);
+                    toasty.show();
                 }
                 else{
+                    tweetList.deleteTweet(tweet);
                     tweet.content = tweetMessage;
+                    tweet._id = null;
+                    Call<Tweet> call = (Call<Tweet>) app.tweetService.createTweet(user._id, tweet);
+                    call.enqueue(this);
                 }
-                startActivity(new Intent(getActivity(), Timeline.class));
                 break;
             case (R.id.selectContact):
                 Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
@@ -274,6 +282,18 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                 sendEmail(getActivity(), emailAddress, app.currentUser.firstName + " has sent you a tweet", tweetMessage);
                 break;
         }
+    }
+
+    @Override
+    public void onResponse(Call<Tweet> call, Response<Tweet> response) {
+        tweet = response.body();
+        tweetList.tweets.add(tweet);
+        startActivity(new Intent(getActivity(), Timeline.class));
+    }
+
+    @Override
+    public void onFailure(Call<Tweet> call, Throwable t) {
+
     }
 }
 

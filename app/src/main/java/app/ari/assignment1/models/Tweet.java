@@ -12,8 +12,8 @@ import java.util.Random;
 public class Tweet {
 
     public String _id;
-    public String date;
     public String content;
+    public String date;
 
     /**
      * constructor for a new tweet

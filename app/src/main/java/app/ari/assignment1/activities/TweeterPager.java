@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
@@ -20,7 +21,7 @@ import app.ari.assignment1.models.TweetList;
 public class TweeterPager extends AppCompatActivity {
 
     private PagerAdapter pagerAdapter;
-    private ArrayList<Tweet> tweets;
+    private List<Tweet> tweets;
     private TweetList tweetList;
     private ViewPager viewPager;
 
@@ -37,7 +38,6 @@ public class TweeterPager extends AppCompatActivity {
         setContentView(viewPager);
 
         setTweetList();
-
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tweets);
         viewPager.setAdapter(pagerAdapter);
 
@@ -53,7 +53,7 @@ public class TweeterPager extends AppCompatActivity {
     }
 
     private void setCurrentItem() {
-        String tweetId = (Long) getIntent().getSerializableExtra(TweeterFragment.EXTRA_TWEET_ID);
+        String tweetId = (String) getIntent().getSerializableExtra(TweeterFragment.EXTRA_TWEET_ID);
         for (int i = 0; i < tweets.size(); i++) {
             if (tweets.get(i)._id.equals(tweetId)) {
                 viewPager.setCurrentItem(i);
@@ -67,9 +67,9 @@ public class TweeterPager extends AppCompatActivity {
      */
     class PagerAdapter extends FragmentStatePagerAdapter
     {
-        private ArrayList<Tweet>  tweets;
+        private List<Tweet>  tweets;
 
-        public PagerAdapter(FragmentManager fm, ArrayList<Tweet> tweets)
+        public PagerAdapter(FragmentManager fm, List<Tweet> tweets)
         {
             super(fm);
             this.tweets = tweets;

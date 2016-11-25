@@ -2,17 +2,27 @@ package app.ari.assignment1.app;
 
 import android.app.Application;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import app.ari.assignment1.TweetService;
 import app.ari.assignment1.models.User;
 import app.ari.assignment1.models.TweetList;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Ari on 27/09/16.
  */
 public class TweetApp extends Application {
-    public ArrayList<User> users = new ArrayList<>();
-    private static final String FILENAME = "portfolio.json";
+    public TweetService tweetService;
+    public boolean tweetServiceAvailable = false;
+    public String service_url  = "https://mytweet-ari.herokuapp.com/";
+    public List<User> users = new ArrayList<>();
+    private static final String FILENAME = "TweetList.json";
     public TweetList tweetList;
     public User currentUser;
     protected static TweetApp app;
@@ -24,6 +34,13 @@ public class TweetApp extends Application {
     public void onCreate(){
         super.onCreate();
         tweetList = new TweetList(getApplicationContext());
+        Gson gson = new GsonBuilder().create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(service_url)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        tweetService = retrofit.create(TweetService.class);
         app = this;
     }
 

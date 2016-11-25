@@ -8,13 +8,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
+import app.ari.assignment1.models.Tweet;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ari on 27/09/16.
  */
-public class Login extends AppCompatActivity implements View.OnClickListener{
+public class Login extends AppCompatActivity implements View.OnClickListener, Callback<List<Tweet>> {
 
     private TextView email;
     private TextView password;
@@ -50,6 +57,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         String Password = this.password.getText().toString();
         if(app.findByEmail(Email, Password) == true) {
             startActivity(new Intent(this, Timeline.class));
+            Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getAllTweets();
+            call.enqueue(this);
         }
         else {
             Toast toast = Toast.makeText(Login.this, "Log in Failed", Toast.LENGTH_SHORT);
@@ -57,5 +66,20 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
             email.setText("");
             password.setText("");
         }
+    }
+
+    public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
+        for(Tweet t :response.body()){
+            app.tweetList.addTweet(t);
+        }
+        Toast toast = Toast.makeText(Login.this, "Successfully retrieved tweets", Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    @Override
+    public void onFailure(Call<List<Tweet>> call, Throwable t) {
+        Toast toast = Toast.makeText(Login.this, "Connection error, unable to retrieve tweets", Toast.LENGTH_SHORT);
+        toast.show();
+        app.tweetServiceAvailable = false;
     }
 }

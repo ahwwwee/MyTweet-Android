@@ -15,7 +15,7 @@ import app.ari.assignment1.helper.DbHelper;
  * Created by Ari on 03/10/16.
  */
 public class TweetList {
-    public static ArrayList<Tweet> tweets;
+    public static List<Tweet> tweets;
     public DbHelper dbHelper;
 
     /**
@@ -24,7 +24,7 @@ public class TweetList {
     public TweetList(Context context){
         try{
             dbHelper = new DbHelper(context);
-            tweets = (ArrayList<Tweet>) dbHelper.selectTweets();
+            tweets = (List<Tweet>) dbHelper.selectTweets();
         } catch (Exception e) {
             tweets = new ArrayList<>();
         }
@@ -36,9 +36,26 @@ public class TweetList {
      * @param tweet
      */
     public void addTweet(Tweet tweet){
-        tweets.add(tweet);
-        dbHelper.addTweet(tweet);
-    }
+        if (tweets.size() !=0) {
+            for(Tweet t : tweets){
+                if (t._id.equals(tweet._id)) {
+                    tweets.remove(t);
+                    dbHelper.deleteTweet(tweet);
+                    tweets.add(tweet);
+                    dbHelper.addTweet(tweet);
+                    return;
+                }else{
+                    tweets.add(tweet);
+                    dbHelper.addTweet(tweet);
+                    return;
+                }
+            }
+        }else{
+            tweets.add(tweet);
+            dbHelper.addTweet(tweet);
+            return;
+        }
+}
 
     /**
      * finds the tweet in the arrayList
@@ -69,7 +86,7 @@ public class TweetList {
         updateLocalTweets(tweet);
     }
 
-    public void refreshResidences(List<Tweet> tweets)
+    public void refreshTweets(List<Tweet> tweets)
     {
         dbHelper.deleteTweets();
         this.tweets.clear();
