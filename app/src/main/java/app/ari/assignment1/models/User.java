@@ -3,6 +3,8 @@ package app.ari.assignment1.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 /**
  * Created by Ari on 27/09/16.
  */

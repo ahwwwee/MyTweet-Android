@@ -14,6 +14,7 @@ public class Tweet {
     public String _id;
     public String content;
     public String date;
+    public User tweeter;
 
     /**
      * constructor for a new tweet

@@ -75,6 +75,15 @@ public class TweetApp extends Application implements Callback<List<User>> {
         return false;
     }
 
+    public User findById(String id){
+        for(User u: users){
+            if(id.equals(u._id)){
+                return u;
+            }
+        }
+        return null;
+    }
+
     /**
      *
      * @return

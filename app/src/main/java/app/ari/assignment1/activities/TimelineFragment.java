@@ -2,6 +2,7 @@ package app.ari.assignment1.activities;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import app.ari.assignment1.activities.settings.SettingsActivity;
@@ -259,13 +260,16 @@ class TweetAdapter extends ArrayAdapter<Tweet> {
             convertView = inflater.inflate(R.layout.tweet_list_item, null);
         }
         Tweet tweet = getItem(position);
+        TextView tweeter = (TextView) convertView.findViewById(R.id.tweeter);
+        if(tweet.tweeter != null) {
+            tweeter.setText(tweet.tweeter.firstName + " " + tweet.tweeter.lastName + " says...");
+        }
 
         TextView listContent = (TextView) convertView.findViewById(R.id.listContent);
         listContent.setText(tweet.content);
 
         TextView listDate = (TextView) convertView.findViewById(R.id.listDate);
         listDate.setText(tweet.date + "");
-
         return convertView;
     }
 }

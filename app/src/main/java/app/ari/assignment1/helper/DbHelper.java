@@ -46,7 +46,8 @@ public class DbHelper extends SQLiteOpenHelper
                 "CREATE TABLE tableTweets " +
                         "(_id text primary key, " +
                         "content text," +
-                        "date text)";
+                        "date text," +
+                        "tweeter text)";
         String userTable =
                 "CREATE TABLE tableUsers " +
                         "(_id text primary key, " +

@@ -39,7 +39,7 @@ public class TweetList {
      */
     public void addTweet(Tweet tweet){
         if (tweets.size() !=0) {
-            for(Tweet t : tweets){
+            for(Tweet t : tweets) {
                 if (t._id.equals(tweet._id)) {
                     tweets.remove(t);
                     dbHelper.deleteTweet(tweet);
@@ -52,7 +52,7 @@ public class TweetList {
                     return;
                 }
             }
-        }else{
+        } else {
             tweets.add(tweet);
             dbHelper.addTweet(tweet);
             return;
