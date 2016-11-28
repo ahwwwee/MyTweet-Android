@@ -173,7 +173,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public void onPause()
     {
         super.onPause();
-        tweetList.updateTweet(tweet);
     }
 
     /**
@@ -293,7 +292,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
 
     @Override
     public void onFailure(Call<Tweet> call, Throwable t) {
-
     }
 }
 

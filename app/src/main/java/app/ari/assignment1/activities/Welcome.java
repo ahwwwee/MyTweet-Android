@@ -20,7 +20,7 @@ import retrofit2.Response;
 /**
  * Created by Ari on 27/09/16.
  */
-public class Welcome extends AppCompatActivity implements View.OnClickListener, Callback<List<User>> {
+public class Welcome extends AppCompatActivity implements View.OnClickListener{
 
     private User user;
     public TweetApp app;
@@ -50,8 +50,6 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     public void onResume(){
         super.onResume();
         app.currentUser = null;
-        Call<List<User>> call = (Call<List<User>>) app.tweetService.getAllUsers();
-        call.enqueue(this);
     }
 
     /**
@@ -68,30 +66,5 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
                startActivity(new Intent(this, Signup.class));
                break;
        }
-    }
-
-    @Override
-    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-        serviceAvailableMessage();
-        app.users = response.body();
-        app.tweetServiceAvailable = true;
-    }
-
-    @Override
-    public void onFailure(Call<List<User>> call, Throwable t) {
-        serviceUnavailableMessage();
-        app.tweetServiceAvailable = false;
-    }
-
-    void serviceUnavailableMessage()
-    {
-        Toast toast = Toast.makeText(this, "Tweet Service Unavailable. Try again later", Toast.LENGTH_LONG);
-        toast.show();
-    }
-
-    void serviceAvailableMessage()
-    {
-        Toast toast = Toast.makeText(this, "Tweet Contacted Successfully", Toast.LENGTH_LONG);
-        toast.show();
     }
 }

@@ -1,6 +1,7 @@
 package app.ari.assignment1.app;
 
 import android.app.Application;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,17 +12,20 @@ import java.util.List;
 import app.ari.assignment1.TweetService;
 import app.ari.assignment1.models.User;
 import app.ari.assignment1.models.TweetList;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Ari on 27/09/16.
  */
-public class TweetApp extends Application {
+public class TweetApp extends Application implements Callback<List<User>> {
     public TweetService tweetService;
     public boolean tweetServiceAvailable = false;
     public String service_url  = "https://mytweet-ari.herokuapp.com/";
-    public List<User> users = new ArrayList<>();
+    public List<User> users;
     private static final String FILENAME = "TweetList.json";
     public TweetList tweetList;
     public User currentUser;
@@ -42,6 +46,9 @@ public class TweetApp extends Application {
                 .build();
         tweetService = retrofit.create(TweetService.class);
         app = this;
+        Call<List<User>> call = (Call<List<User>>) app.tweetService.getAllUsers();
+        call.enqueue(this);
+        users = tweetList.users;
     }
 
     /**
@@ -76,4 +83,30 @@ public class TweetApp extends Application {
         return app;
     }
 
+    @Override
+    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+        serviceAvailableMessage();
+        for(User u : response.body()) {
+            app.tweetList.addUser(u);
+        }
+        tweetServiceAvailable = true;
+    }
+
+    @Override
+    public void onFailure(Call<List<User>> call, Throwable t) {
+        serviceUnavailableMessage();
+        tweetServiceAvailable = false;
+    }
+
+    void serviceUnavailableMessage()
+    {
+        Toast toast = Toast.makeText(this, "Tweet Service Unavailable. Only local information available", Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    void serviceAvailableMessage()
+    {
+        Toast toast = Toast.makeText(this, "Tweet Contacted Successfully", Toast.LENGTH_LONG);
+        toast.show();
+    }
 }

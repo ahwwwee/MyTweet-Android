@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.ari.assignment1.models.Tweet;
+import app.ari.assignment1.models.User;
 
 /**
  * Created by ictskills on 24/11/16.
@@ -74,6 +75,20 @@ public class DbHelper extends SQLiteOpenHelper
         db.close();
     }
 
+    public void addUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(PRIMARY_KEY, user._id);
+        values.put(FIRSTNAME, user.firstName);
+        values.put(LASTNAME, user.lastName);
+        values.put(EMAIL, user.email);
+        values.put(PASSWORD, user.password);
+
+        // Insert record
+        db.insert(TABLE_USERS, null, values);
+        db.close();
+    }
+
     /**
      * Persist a list of tweets
      *
@@ -85,7 +100,7 @@ public class DbHelper extends SQLiteOpenHelper
         }
     }
 
-    public Tweet selectTweets(String id) {
+    public Tweet selectTweet(String id) {
         Tweet tweet;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -109,6 +124,32 @@ public class DbHelper extends SQLiteOpenHelper
         return tweet;
     }
 
+    public User selectUser(String id) {
+        User user;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            user = new User();
+
+            cursor = db.rawQuery("SELECT * FROM tableUsers WHERE _id = ?", new String[]{id});
+
+            if (cursor.getCount() > 0) {
+                int columnIndex = 0;
+                cursor.moveToFirst();
+                user._id = cursor.getString(columnIndex++);
+                user.firstName = cursor.getString(columnIndex++);
+                user.lastName = cursor.getString(columnIndex++);
+                user.email = cursor.getString(columnIndex++);
+                user.password = cursor.getString(columnIndex++);
+            }
+        }
+        finally {
+            cursor.close();
+        }
+        return user;
+    }
+
     public void deleteTweet(Tweet tweet) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
@@ -116,6 +157,16 @@ public class DbHelper extends SQLiteOpenHelper
         }
         catch (Exception e) {
             Log.d(TAG, "delete tweet failure: " + e.getMessage());
+        }
+    }
+
+    public void deleteUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.delete("tableUsers", "_id" + "=?", new String[]{user._id});
+        }
+        catch (Exception e) {
+            Log.d(TAG, "delete user failure: " + e.getMessage());
         }
     }
 
@@ -138,11 +189,36 @@ public class DbHelper extends SQLiteOpenHelper
                 tweet.date = cursor.getString(columnIndex++);
                 columnIndex = 0;
 
-                tweets.add(tweet);
+                if(tweet._id != "123" && tweet.content != null) {
+                    tweets.add(tweet);
+                }
             } while (cursor.moveToNext());
         }
         cursor.close();
         return tweets;
+    }
+
+    public List<User> selectUsers() {
+        List<User> users = new ArrayList<User>();
+        String query = "SELECT * FROM " + "tableUsers";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            int columnIndex = 0;
+            do {
+                User user = new User();
+                user._id = cursor.getString(columnIndex++);
+                user.firstName = cursor.getString(columnIndex++);
+                user.lastName = cursor.getString(columnIndex++);
+                user.email = cursor.getString(columnIndex++);
+                user.password = cursor.getString(columnIndex++);
+                columnIndex = 0;
+
+                users.add(user);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return users;
     }
 
     /**
@@ -184,6 +260,22 @@ public class DbHelper extends SQLiteOpenHelper
             values.put(CONTENT, tweet.content);
             values.put(DATE, tweet.date);
             db.update("tableTweets", values, "_id" + "=?", new String[]{tweet._id});
+        }
+        catch (Exception e) {
+            Log.d(TAG, "update tweets failure: " + e.getMessage());
+        }
+    }
+
+    public void updateUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(PRIMARY_KEY, user._id);
+            values.put(FIRSTNAME, user.firstName);
+            values.put(LASTNAME, user.lastName);
+            values.put(EMAIL, user.email);
+            values.put(PASSWORD, user.password);
+            db.update("tableTweets", values, "_id" + "=?", new String[]{user._id});
         }
         catch (Exception e) {
             Log.d(TAG, "update tweets failure: " + e.getMessage());

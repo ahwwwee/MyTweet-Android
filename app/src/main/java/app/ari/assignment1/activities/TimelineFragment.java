@@ -1,43 +1,44 @@
 package app.ari.assignment1.activities;
 
-        import java.lang.reflect.Array;
-        import java.util.ArrayList;
-        import java.util.List;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
-        import app.ari.assignment1.activities.settings.SettingsActivity;
-        import app.ari.assignment1.helper.Helper;
-        import app.ari.assignment1.R;
-        import app.ari.assignment1.app.TweetApp;
-        import app.ari.assignment1.models.TweetList;
-        import app.ari.assignment1.models.Tweet;
-        import app.ari.assignment1.models.User;
-        import retrofit2.Call;
-        import retrofit2.Callback;
-        import retrofit2.Response;
+import app.ari.assignment1.activities.settings.SettingsActivity;
+import app.ari.assignment1.helper.Helper;
+import app.ari.assignment1.R;
+import app.ari.assignment1.app.TweetApp;
+import app.ari.assignment1.models.TweetList;
+import app.ari.assignment1.models.Tweet;
+import app.ari.assignment1.models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-        import android.view.ActionMode;
-        import android.widget.AbsListView;
-        import android.widget.ListView;
-        import android.view.LayoutInflater;
-        import android.view.Menu;
-        import android.view.MenuInflater;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.ArrayAdapter;
-        import android.view.ViewGroup;
-        import android.widget.AdapterView;
-        import android.widget.TextView;
-        import android.annotation.SuppressLint;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.support.v4.app.ListFragment;
-        import android.widget.AdapterView.OnItemClickListener;
+import android.view.ActionMode;
+import android.widget.AbsListView;
+import android.widget.ListView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 /**
  * Created by Ari on 10/10/16.
  */
-public class TimelineFragment extends ListFragment implements OnItemClickListener, AbsListView.MultiChoiceModeListener {
+public class TimelineFragment extends ListFragment implements OnItemClickListener, AbsListView.MultiChoiceModeListener, Callback<List<Tweet>> {
     private List<Tweet> tweets;
     private TextView welcome;
     private TweetAdapter adapter;
@@ -59,6 +60,8 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         app = TweetApp.getApp();
         tweetList = app.tweetList;
         tweets = tweetList.tweets;
+        Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getAllTweets();
+        call.enqueue(this);
         adapter = new TweetAdapter(getActivity(), tweets);
         setListAdapter(adapter);
     }
@@ -77,6 +80,23 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         timeline.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         timeline.setMultiChoiceModeListener(this);
         return v;
+    }
+
+    public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
+        for(Tweet t :response.body()){
+            app.tweetList.addTweet(t);
+        }
+        adapter.notifyDataSetChanged();
+        Toast toast = Toast.makeText(getActivity(), "Successfully retrieved tweets", Toast.LENGTH_SHORT);
+        toast.show();
+        app.tweetServiceAvailable = true;
+    }
+
+    @Override
+    public void onFailure(Call<List<Tweet>> call, Throwable t) {
+        Toast toast = Toast.makeText(getActivity(), "Connection error, unable to retrieve tweets", Toast.LENGTH_SHORT);
+        toast.show();
+        app.tweetServiceAvailable = false;
     }
 
     /**
@@ -100,6 +120,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     @Override
     public void onResume() {
         super.onResume();
+        adapter.notifyDataSetChanged();
         ((TweetAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
@@ -126,18 +147,21 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             case R.id.clear:
-                for(Tweet t : tweetList.tweets){
-                    tweetList.deleteTweet(t);
-                }
+                tweetList.deleteTweets();
                 startActivity(new Intent(getActivity(), Timeline.class));
                 return true;
             case R.id.newTweet:
-                Tweet tweet = new Tweet();
-                tweet._id = "123";
-                tweetList.addTweet(tweet);
-                Intent i = new Intent(getActivity(), TweeterPager.class);
-                i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
-                startActivityForResult(i, 0);
+                if (app.tweetServiceAvailable == true) {
+                    Tweet tweet = new Tweet();
+                    tweet._id = "123";
+                    tweetList.addTweet(tweet);
+                    Intent i = new Intent(getActivity(), TweeterPager.class);
+                    i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
+                    startActivityForResult(i, 0);
+                } else {
+                    Toast toast = Toast.makeText(getActivity(), "Cannot make a tweet while offline", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -149,7 +173,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
      * @param view
      * @param position
      * @param id Tweet tweet = adapter.getItem(position);
-        Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
+    Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -216,32 +240,32 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     }
 }
 
-       /**
-        * a helper class to populate list view with arrays·
-        */
-        class TweetAdapter extends ArrayAdapter<Tweet> {
-            private Context context;
+/**
+ * a helper class to populate list view with arrays·
+ */
+class TweetAdapter extends ArrayAdapter<Tweet> {
+    private Context context;
 
-            public TweetAdapter(Context context, List<Tweet> tweets) {
-                super(context, 0, tweets);
-                this.context = context;
-            }
+    public TweetAdapter(Context context, List<Tweet> tweets) {
+        super(context, 0, tweets);
+        this.context = context;
+    }
 
-            @SuppressLint("InflateParams")
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.tweet_list_item, null);
-                }
-                Tweet tweet = getItem(position);
+    @SuppressLint("InflateParams")
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.tweet_list_item, null);
+        }
+        Tweet tweet = getItem(position);
 
-                TextView listContent = (TextView) convertView.findViewById(R.id.listContent);
-                listContent.setText(tweet.content);
+        TextView listContent = (TextView) convertView.findViewById(R.id.listContent);
+        listContent.setText(tweet.content);
 
-                TextView listDate = (TextView) convertView.findViewById(R.id.listDate);
-                listDate.setText(tweet.date + "");
+        TextView listDate = (TextView) convertView.findViewById(R.id.listDate);
+        listDate.setText(tweet.date + "");
 
-                return convertView;
-            }
-       }
+        return convertView;
+    }
+}
