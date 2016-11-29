@@ -20,6 +20,11 @@
         <activity android:name=".activities.Login"></activity>
         <activity android:name=".activities.Signup"></activity>
         <activity android:name=".activities.Timeline"></activity>
+        <activity android:name=".activities.UserList">
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="app.ari.assignment1.activities.Timeline" />
+        </activity>
         <activity android:name=".activities.TweeterPager"
             android:label="@string/app_name">
             <meta-data

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroud_activated">
+
+    <Button
+        android:layout_width="10dp"
+        android:layout_height="40dp"
+        style="?android:attr/buttonStyleSmall"
+        android:text="@string/follow"
+        android:background="@color/colorAccent"
+        android:layout_alignLeft="@+id/userName"
+        android:layout_alignParentRight="true"
+        android:id="@+id/follow"
+        android:layout_gravity="right"
+        />
+
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:id="@+id/userName"
+        android:layout_margin="20dp"
+        android:layout_alignParentTop="true"/>
+
+</RelativeLayout>

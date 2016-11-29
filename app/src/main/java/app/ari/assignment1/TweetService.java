@@ -39,4 +39,7 @@ public interface TweetService {
 
     @GET("/api/users/{id}/following")
     Call<List<Tweet>> getFollowing(@Path("id") String id);
+
+    @POST("/api/users/{id}/follow")
+    Call<User> follow(@Path("id") String id);
 }

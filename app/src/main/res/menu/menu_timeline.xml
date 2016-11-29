@@ -18,4 +18,8 @@
         android:orderInCategory="100"
         android:title="@string/clear"/>
 
+    <item android:id="@+id/users"
+        android:orderInCategory="100"
+        android:title="@string/users"/>
+
 </menu>

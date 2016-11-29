@@ -109,6 +109,15 @@ public class TweetList {
         }
     }
 
+    public User getUser(String id){
+        for(User u : users){
+            if(id.equals(u._id)){
+                return u;
+            }
+        }
+        return null;
+    }
+
     public void updateTweet(Tweet tweet) {
         dbHelper.updateTweet(tweet);
         updateLocalTweets(tweet);

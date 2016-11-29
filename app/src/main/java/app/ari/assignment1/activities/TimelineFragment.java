@@ -149,6 +149,9 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
                 tweetList.deleteTweets();
                 startActivity(new Intent(getActivity(), Timeline.class));
                 return true;
+            case R.id.users:
+                startActivity(new Intent(getActivity(), UserList.class));
+                return true;
             case R.id.newTweet:
                 if (app.tweetServiceAvailable == true) {
                     Tweet tweet = new Tweet();

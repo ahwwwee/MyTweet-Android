@@ -26,4 +26,6 @@
     <string name="nmr_tweets_summary">How many Tweets to store locally?</string>
     <string name="set_refresh_interval">Refresh</string>
     <string name="set_refresh_interval_summary">Frequency of cloud updates (minutes)</string>
+    <string name="follow">Follow</string>
+    <string name="users">List of Users</string>
 </resources>
