@@ -268,6 +268,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                     Call<Tweet> call = (Call<Tweet>) app.tweetService.createTweet(user._id, tweet);
                     call.enqueue(this);
                 }
+                startActivity(new Intent(getActivity(), Timeline.class));
                 break;
             case (R.id.selectContact):
                 Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
@@ -287,7 +288,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public void onResponse(Call<Tweet> call, Response<Tweet> response) {
         tweet = response.body();
         tweetList.tweets.add(tweet);
-        startActivity(new Intent(getActivity(), Timeline.class));
     }
 
     @Override

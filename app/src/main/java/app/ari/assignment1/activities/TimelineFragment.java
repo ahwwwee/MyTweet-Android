@@ -61,7 +61,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         app = TweetApp.getApp();
         tweetList = app.tweetList;
         tweets = tweetList.tweets;
-        Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getAllTweets();
+        Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getFollowing(app.currentUser._id);
         call.enqueue(this);
         adapter = new TweetAdapter(getActivity(), tweets);
         setListAdapter(adapter);
@@ -84,9 +84,7 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     }
 
     public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
-        for(Tweet t :response.body()){
-            app.tweetList.addTweet(t);
-        }
+        tweetList.refreshTweets(response.body());
         adapter.notifyDataSetChanged();
         Toast toast = Toast.makeText(getActivity(), "Successfully retrieved tweets", Toast.LENGTH_SHORT);
         toast.show();

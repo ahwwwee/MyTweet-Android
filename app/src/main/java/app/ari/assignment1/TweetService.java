@@ -36,4 +36,7 @@ public interface TweetService {
 
     @POST("/api/update/{id}")
     Call<Tweet> update(@Path("id") String id, @Body String content);
+
+    @GET("/api/users/{id}/following")
+    Call<List<Tweet>> getFollowing(@Path("id") String id);
 }
