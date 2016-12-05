@@ -9,6 +9,9 @@ import com.google.gson.GsonBuilder;
 import java.util.List;
 
 import app.ari.assignment1.TweetService;
+import app.ari.assignment1.TweetServiceOpen;
+import app.ari.assignment1.helper.RetrofitServiceFactory;
+import app.ari.assignment1.models.Token;
 import app.ari.assignment1.models.User;
 import app.ari.assignment1.models.TweetList;
 import retrofit2.Call;
@@ -20,8 +23,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Ari on 27/09/16.
  */
-public class TweetApp extends Application implements Callback<List<User>> {
+public class TweetApp extends Application implements Callback<Token> {
     public TweetService tweetService;
+    public TweetServiceOpen tweetServiceOpen;
     public boolean tweetServiceAvailable = false;
     public String service_url  = "https://mytweet-ari.herokuapp.com/";
     public List<User> users;
@@ -29,6 +33,7 @@ public class TweetApp extends Application implements Callback<List<User>> {
     public TweetList tweetList;
     public User currentUser;
     protected static TweetApp app;
+    public boolean verified;
 
     /**
      * Loads these when the application is opened
@@ -44,9 +49,11 @@ public class TweetApp extends Application implements Callback<List<User>> {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         tweetService = retrofit.create(TweetService.class);
+        tweetServiceOpen = retrofit.create(TweetServiceOpen.class);
+
         app = this;
-        Call<List<User>> call = (Call<List<User>>) app.tweetService.getAllUsers();
-        call.enqueue(this);
+        /*Call<List<User>> call = (Call<List<User>>) tweetServiceOpen.getAllUsers();
+        call.enqueue(this);*/
         users = tweetList.users;
     }
 
@@ -64,14 +71,54 @@ public class TweetApp extends Application implements Callback<List<User>> {
      * @param password
      * @return
      */
-    public boolean findByEmail(String email, String password){
+    public boolean verify(String email, String password){
         for(User u : users){
             if(email.equals(u.email) && password.equals(u.password)){
                 currentUser = u;
-                return true;
+                Call<Token> call = (Call<Token>) tweetServiceOpen.auth(u);
+                call.enqueue(this);
             }
         }
-        return false;
+        return verified;
+    }
+
+    public void authenticate(String email, String password){
+        for(User u : users){
+            if(email.equals(u.email) && password.equals(u.password)){
+                currentUser = u;
+                Call<Token> call = (Call<Token>) tweetServiceOpen.auth(u);
+                call.enqueue(this);
+            }
+        }
+    }
+
+    @Override
+    public void onResponse(Call<Token> call, Response<Token> response) {
+        tweetServiceAvailable = true;
+        Token auth = response.body();
+        currentUser = auth.user;
+        verified = true;
+        tweetService = RetrofitServiceFactory.createService(TweetService.class, auth.token);
+        serviceAvailableMessage();
+
+    }
+
+    @Override
+    public void onFailure(Call<Token> call, Throwable t) {
+        tweetServiceAvailable = false;
+        verified = false;
+        serviceUnavailableMessage();
+
+
+    }
+
+    public User findByEmail(String email){
+        for(User u: users){
+            if(email.equals(u.email)){
+                return u;
+            }
+        }
+        return null;
     }
 
     public User findById(String id){
@@ -91,7 +138,7 @@ public class TweetApp extends Application implements Callback<List<User>> {
         return app;
     }
 
-    @Override
+    /*@Override
     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
         serviceAvailableMessage();
         for(User u : response.body()) {
@@ -104,7 +151,7 @@ public class TweetApp extends Application implements Callback<List<User>> {
     public void onFailure(Call<List<User>> call, Throwable t) {
         serviceUnavailableMessage();
         tweetServiceAvailable = false;
-    }
+    }*/
 
     void serviceUnavailableMessage()
     {

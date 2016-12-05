@@ -47,7 +47,7 @@ public class UserList extends AppCompatActivity implements AdapterView.OnItemCli
 
         app = TweetApp.getApp();
         users = tweetList.users;
-        Call<List<User>> call = (Call<List<User>>) app.tweetService.getAllUsers();
+        Call<List<User>> call = (Call<List<User>>) app.tweetServiceOpen.getAllUsers();
         call.enqueue(this);
         adapter = new UserAdapter(this, users);
         listView.setAdapter(adapter);
@@ -62,9 +62,9 @@ public class UserList extends AppCompatActivity implements AdapterView.OnItemCli
 
     @Override
     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-        /*for(User u: response.body()){
+        for(User u: response.body()){
             tweetList.addUser(u);
-        }*/
+        }
         Toast toast = Toast.makeText(this, "Successfully retrieved users", Toast.LENGTH_SHORT);
         toast.show();
         app.tweetServiceAvailable = true;

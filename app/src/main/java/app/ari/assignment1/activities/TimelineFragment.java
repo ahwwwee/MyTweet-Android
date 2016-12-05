@@ -61,8 +61,10 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
         app = TweetApp.getApp();
         tweetList = app.tweetList;
         tweets = tweetList.tweets;
-        Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getFollowing(app.currentUser._id);
-        call.enqueue(this);
+        if (app.tweetServiceAvailable) {
+            Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getFollowing(app.currentUser._id);
+            call.enqueue(this);
+        }
         adapter = new TweetAdapter(getActivity(), tweets);
         setListAdapter(adapter);
     }
