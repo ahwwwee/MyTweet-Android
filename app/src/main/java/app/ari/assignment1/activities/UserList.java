@@ -31,7 +31,6 @@ import retrofit2.Response;
  * Created by ictskills on 29/11/16.
  */
 public class UserList extends AppCompatActivity implements AdapterView.OnItemClickListener, Callback<List<User>> {
-    public TweetList tweetList;
     public TweetApp app;
     public List<User> users;
     public UserAdapter adapter;
@@ -46,11 +45,9 @@ public class UserList extends AppCompatActivity implements AdapterView.OnItemCli
         listView = (ListView) findViewById(R.id.userlist);
 
         app = TweetApp.getApp();
-        users = tweetList.users;
-        Call<List<User>> call = (Call<List<User>>) app.tweetServiceOpen.getAllUsers();
+        users = app.tweetList.allUsers;
+        Call<List<User>> call = (Call<List<User>>) app.tweetService.getAllUsers();
         call.enqueue(this);
-        adapter = new UserAdapter(this, users);
-        listView.setAdapter(adapter);
     }
 
     @Override
@@ -63,11 +60,13 @@ public class UserList extends AppCompatActivity implements AdapterView.OnItemCli
     @Override
     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
         for(User u: response.body()){
-            tweetList.addUser(u);
+            app.tweetList.addAllUsers(u);
         }
         Toast toast = Toast.makeText(this, "Successfully retrieved users", Toast.LENGTH_SHORT);
         toast.show();
         app.tweetServiceAvailable = true;
+        adapter = new UserAdapter(this, users);
+        listView.setAdapter(adapter);
     }
 
     @Override

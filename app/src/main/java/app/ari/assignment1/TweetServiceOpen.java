@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * Created by ictskills on 01/12/16.
@@ -17,9 +18,9 @@ public interface TweetServiceOpen {
     @POST("/api/users/authenticate")
     Call<Token> auth(@Body User user);
 
-    @GET("/api/users")
-    Call<List<User>> getAllUsers();
-
     @POST("/api/users")
-    Call<User> createUser(@Body User User);
+    Call<User> createUser(@Body User user);
+
+    @POST("/api/users/{email}")
+    Call<User> findOne(@Path("email") String email);
 }

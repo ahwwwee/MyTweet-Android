@@ -27,6 +27,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener, C
     EditText email;
     EditText password;
     private TweetApp app;
+    User user;
 
     /**
      * Loads these when the activity is opened
@@ -61,12 +62,8 @@ public class Signup extends AppCompatActivity implements View.OnClickListener, C
         String Email = this.email.getText().toString();
         String Password = this.password.getText().toString();
 
-        User user = new User();
-        user.firstName = FirstName;
-        user.lastName = LastName;
-        user.email = Email;
-        user.password = Password;
-        app.addUser(user);
+        user = new User(FirstName, LastName, Email, Password);
+
         Call<User> call= (Call<User>)app.tweetServiceOpen.createUser(user);
         call.enqueue(this);
 
@@ -75,7 +72,9 @@ public class Signup extends AppCompatActivity implements View.OnClickListener, C
 
     @Override
     public void onResponse(Call<User> call, Response<User> response) {
-        app.addUser(response.body());
+        User newU = response.body();
+        user._id = newU._id;
+        app.addUser(user);
         startActivity(new Intent(this, Login.class));
     }
 

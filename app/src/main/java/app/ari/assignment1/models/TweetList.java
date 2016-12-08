@@ -17,6 +17,7 @@ import app.ari.assignment1.helper.DbHelper;
 public class TweetList {
     public static List<Tweet> tweets;
     public static List<User> users;
+    public static List<User> allUsers;
     public DbHelper dbHelper;
 
     /**
@@ -27,6 +28,7 @@ public class TweetList {
             dbHelper = new DbHelper(context);
             tweets = dbHelper.selectTweets();
             users = (List<User>) dbHelper.selectUsers();
+            allUsers = (List<User>) dbHelper.selectUsers();
         } catch (Exception e) {
             tweets = new ArrayList<>();
         }
@@ -88,24 +90,13 @@ public class TweetList {
     }
 
     public void addUser(User user) {
-        if (users.size() !=0) {
-            for(User u : users){
-                if (u._id.equals(user._id)) {
-                    users.remove(u);
-                    dbHelper.deleteUser(user);
-                    users.add(user);
-                    dbHelper.addUser(user);
-                    return;
-                }else{
-                    users.add(user);
-                    dbHelper.addUser(user);
-                    return;
-                }
-            }
-        }else{
-            users.add(user);
-            dbHelper.addUser(user);
-            return;
+        dbHelper.deleteUsers();
+        dbHelper.addUser(user);
+    }
+
+    public void addAllUsers(User user){
+        if(!allUsers.contains(user)) {
+            allUsers.add(user);
         }
     }
 
@@ -130,8 +121,11 @@ public class TweetList {
 
         dbHelper.addTweets(tweets);
 
-        for (int i = 0; i < tweets.size(); i += 1) {
-            this.tweets.add(tweets.get(i));
+
+        if (tweets != null) {
+            for (int i = 0; i < tweets.size(); i += 1) {
+                this.tweets.add(tweets.get(i));
+            }
         }
     }
 

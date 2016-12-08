@@ -96,8 +96,10 @@ public class DbHelper extends SQLiteOpenHelper
      * @param tweets The list of Tweet object to be saved to database.
      */
     public void addTweets(List<Tweet> tweets) {
-        for (Tweet t : tweets) {
-            addTweet(t);
+        if(tweets != null) {
+            for (Tweet t : tweets) {
+                addTweet(t);
+            }
         }
     }
 
@@ -232,6 +234,16 @@ public class DbHelper extends SQLiteOpenHelper
         }
         catch (Exception e) {
             Log.d(TAG, "delete tweets failure: " + e.getMessage());
+        }
+    }
+
+    public void deleteUsers() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL("delete from tableUsers");
+        }
+        catch (Exception e) {
+            Log.d(TAG, "delete users failure: " + e.getMessage());
         }
     }
 

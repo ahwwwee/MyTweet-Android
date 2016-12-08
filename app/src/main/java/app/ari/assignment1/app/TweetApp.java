@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Ari on 27/09/16.
  */
-public class TweetApp extends Application implements Callback<Token> {
+public class TweetApp extends Application {
     public TweetService tweetService;
     public TweetServiceOpen tweetServiceOpen;
     public boolean tweetServiceAvailable = false;
@@ -32,8 +32,8 @@ public class TweetApp extends Application implements Callback<Token> {
     private static final String FILENAME = "TweetList.json";
     public TweetList tweetList;
     public User currentUser;
+    public User userCurrent;
     protected static TweetApp app;
-    public boolean verified;
 
     /**
      * Loads these when the application is opened
@@ -62,7 +62,9 @@ public class TweetApp extends Application implements Callback<Token> {
      * @param user
      */
     public void addUser(User user){
+        users.clear();
         users.add(user);
+        tweetList.addUser(user);
     }
 
     /**
@@ -75,42 +77,12 @@ public class TweetApp extends Application implements Callback<Token> {
         for(User u : users){
             if(email.equals(u.email) && password.equals(u.password)){
                 currentUser = u;
-                Call<Token> call = (Call<Token>) tweetServiceOpen.auth(u);
-                call.enqueue(this);
+                return true;
             }
         }
-        return verified;
+        return false;
     }
 
-    public void authenticate(String email, String password){
-        for(User u : users){
-            if(email.equals(u.email) && password.equals(u.password)){
-                currentUser = u;
-                Call<Token> call = (Call<Token>) tweetServiceOpen.auth(u);
-                call.enqueue(this);
-            }
-        }
-    }
-
-    @Override
-    public void onResponse(Call<Token> call, Response<Token> response) {
-        tweetServiceAvailable = true;
-        Token auth = response.body();
-        currentUser = auth.user;
-        verified = true;
-        tweetService = RetrofitServiceFactory.createService(TweetService.class, auth.token);
-        serviceAvailableMessage();
-
-    }
-
-    @Override
-    public void onFailure(Call<Token> call, Throwable t) {
-        tweetServiceAvailable = false;
-        verified = false;
-        serviceUnavailableMessage();
-
-
-    }
 
     public User findByEmail(String email){
         for(User u: users){
@@ -153,13 +125,13 @@ public class TweetApp extends Application implements Callback<Token> {
         tweetServiceAvailable = false;
     }*/
 
-    void serviceUnavailableMessage()
+    public void serviceUnavailableMessage()
     {
         Toast toast = Toast.makeText(this, "Tweet Service Unavailable. Only local information available", Toast.LENGTH_LONG);
         toast.show();
     }
 
-    void serviceAvailableMessage()
+    public void serviceAvailableMessage()
     {
         Toast toast = Toast.makeText(this, "Tweet Contacted Successfully", Toast.LENGTH_LONG);
         toast.show();

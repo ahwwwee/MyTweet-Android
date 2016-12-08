@@ -19,6 +19,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public TweetApp app;
     private User user;
     TextView welcome;
+    public TweetAdapter tweetAdapter;
 
     /**
      * Loads these when the activity is opened
