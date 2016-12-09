@@ -52,9 +52,6 @@ public class TweetApp extends Application {
         tweetServiceOpen = retrofit.create(TweetServiceOpen.class);
 
         app = this;
-        /*Call<List<User>> call = (Call<List<User>>) tweetServiceOpen.getAllUsers();
-        call.enqueue(this);*/
-        users = tweetList.users;
     }
 
     /**
@@ -62,8 +59,8 @@ public class TweetApp extends Application {
      * @param user
      */
     public void addUser(User user){
-        users.clear();
-        users.add(user);
+        tweetList.users.clear();
+        tweetList.users.add(user);
         tweetList.addUser(user);
     }
 
@@ -74,7 +71,7 @@ public class TweetApp extends Application {
      * @return
      */
     public boolean verify(String email, String password){
-        for(User u : users){
+        for(User u : tweetList.users){
             if(email.equals(u.email) && password.equals(u.password)){
                 currentUser = u;
                 return true;
@@ -85,7 +82,7 @@ public class TweetApp extends Application {
 
 
     public User findByEmail(String email){
-        for(User u: users){
+        for(User u: tweetList.users){
             if(email.equals(u.email)){
                 return u;
             }
@@ -94,7 +91,7 @@ public class TweetApp extends Application {
     }
 
     public User findById(String id){
-        for(User u: users){
+        for(User u: tweetList.users){
             if(id.equals(u._id)){
                 return u;
             }

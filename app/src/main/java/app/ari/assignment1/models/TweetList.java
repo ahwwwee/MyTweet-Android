@@ -90,13 +90,19 @@ public class TweetList {
     }
 
     public void addUser(User user) {
+        users.clear();
+        users.add(user);
         dbHelper.deleteUsers();
         dbHelper.addUser(user);
     }
 
-    public void addAllUsers(User user){
-        if(!allUsers.contains(user)) {
-            allUsers.add(user);
+    public void addAllUsers(List<User> AllUsers){
+        this.allUsers.clear();
+
+        if (AllUsers != null) {
+            for (User u: AllUsers) {
+                this.allUsers.add(u);
+            }
         }
     }
 

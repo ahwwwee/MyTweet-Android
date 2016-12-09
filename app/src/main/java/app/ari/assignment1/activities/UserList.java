@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,9 +60,7 @@ public class UserList extends AppCompatActivity implements AdapterView.OnItemCli
 
     @Override
     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-        for(User u: response.body()){
-            app.tweetList.addAllUsers(u);
-        }
+        app.tweetList.addAllUsers(response.body());
         Toast toast = Toast.makeText(this, "Successfully retrieved users", Toast.LENGTH_SHORT);
         toast.show();
         app.tweetServiceAvailable = true;
@@ -75,27 +74,36 @@ public class UserList extends AppCompatActivity implements AdapterView.OnItemCli
         toast.show();
         app.tweetServiceAvailable = false;
     }
-}
 
-class UserAdapter extends ArrayAdapter<User> {
-    private Context context;
 
-    public UserAdapter(Context context, List<User> users) {
-        super(context, 0, users);
-        this.context = context;
-    }
+    class UserAdapter extends ArrayAdapter<User> {
+        private Context context;
 
-    @SuppressLint("InflateParams")
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.user_list_item, null);
+        public UserAdapter(Context context, List<User> users) {
+            super(context, 0, users);
+            this.context = context;
         }
-        User user = getItem(position);
-        TextView userName = (TextView) convertView.findViewById(R.id.userName);
-        userName.setText(user.firstName + " " + user.lastName);
 
-        return convertView;
+        @SuppressLint("InflateParams")
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.user_list_item, null);
+            }
+            User user = getItem(position);
+            TextView userName = (TextView) convertView.findViewById(R.id.userName);
+            userName.setText(user.firstName + " " + user.lastName);
+
+            TextView id = (TextView) convertView.findViewById(R.id.userId);
+            id.setText(user._id);
+
+            Button button = (Button) convertView.findViewById(R.id.follow);
+            if (user._id.equals(app.currentUser._id)){
+                button.setVisibility(View.GONE);
+            }
+
+            return convertView;
+        }
     }
 }
