@@ -173,7 +173,8 @@ class UserAdapter extends ArrayAdapter<User> {
         if(app.currentUser.following != null) {
             if(app.currentUser.following.contains(user._id)){
                 button.setText("unfollow");
-
+            } else {
+                button.setText("follow");
             }
         }
 
