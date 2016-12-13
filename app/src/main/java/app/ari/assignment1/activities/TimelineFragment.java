@@ -39,9 +39,8 @@ import android.widget.Toast;
 /**
  * Created by Ari on 10/10/16.
  */
-public class TimelineFragment extends ListFragment implements OnItemClickListener, AbsListView.MultiChoiceModeListener, Callback<List<Tweet>> {
+public class TimelineFragment extends ListFragment implements AbsListView.MultiChoiceModeListener, Callback<List<Tweet>> {
     private List<Tweet> tweets;
-    private TextView welcome;
     private TweetAdapter adapter;
     TweetApp app;
     public ListView timeline;
@@ -88,8 +87,6 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
     public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
         tweetList.refreshTweets(response.body());
         adapter.notifyDataSetChanged();
-        Toast toast = Toast.makeText(getActivity(), "Successfully retrieved tweets", Toast.LENGTH_SHORT);
-        toast.show();
         app.tweetServiceAvailable = true;
     }
 
@@ -169,20 +166,6 @@ public class TimelineFragment extends ListFragment implements OnItemClickListene
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Opens new TweeterPager,then TweeterFragment class with clicked on tweet
-     * @param parent
-     * @param view
-     * @param position
-     * @param id Tweet tweet = adapter.getItem(position);
-    Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet.id);
-     */
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Tweet tweet = adapter.getItem(position);
-        Helper.startActivityWithData(getActivity(), TweeterPager.class, TweeterFragment.EXTRA_TWEET_ID, tweet._id);
     }
 
     @Override

@@ -92,6 +92,7 @@ public class TweetList {
     public void addUser(User user) {
         users.clear();
         users.add(user);
+        allUsers.add(user);
         dbHelper.deleteUsers();
         dbHelper.addUser(user);
     }

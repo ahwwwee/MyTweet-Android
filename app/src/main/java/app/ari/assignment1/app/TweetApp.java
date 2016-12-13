@@ -59,8 +59,6 @@ public class TweetApp extends Application {
      * @param user
      */
     public void addUser(User user){
-        tweetList.users.clear();
-        tweetList.users.add(user);
         tweetList.addUser(user);
     }
 

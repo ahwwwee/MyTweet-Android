@@ -38,5 +38,8 @@ public interface TweetService {
     Call<List<Tweet>> getFollowing(@Path("id") String id);
 
     @POST("/api/users/{id}/follow")
-    Call<User> follow(@Path("id") String id);
+    Call<User> follow(@Path("id") String _id, @Body String target);
+
+    @POST("/api/users/{id}/unfollow")
+    Call<User> unfollow(@Path("id") String _id, @Body String target);
 }
