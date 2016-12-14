@@ -26,11 +26,12 @@ public class TweetList {
     public TweetList(Context context){
         try{
             dbHelper = new DbHelper(context);
-            tweets = dbHelper.selectTweets();
             users = (List<User>) dbHelper.selectUsers();
+            tweets = dbHelper.selectTweets();
             allUsers = (List<User>) dbHelper.selectUsers();
         } catch (Exception e) {
             tweets = new ArrayList<>();
+            allUsers = new ArrayList<>();
         }
     }
 
@@ -90,7 +91,9 @@ public class TweetList {
     }
 
     public void addUser(User user) {
-        users.clear();
+        if (users != null) {
+            users.clear();
+        }
         users.add(user);
         allUsers.add(user);
         dbHelper.deleteUsers();

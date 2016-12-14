@@ -28,6 +28,8 @@ public class DbHelper extends SQLiteOpenHelper
     static final String PRIMARY_KEY = "_id";
     static final String CONTENT = "content";
     static final String DATE = "date";
+    static final String TWEETERFN = "tweeterFirstName";
+    static final String TWEETERLN = "tweeterLastName";
     static final String FIRSTNAME = "firstName";
     static final String LASTNAME = "lastName";
     static final String PASSWORD = "password";
@@ -47,7 +49,8 @@ public class DbHelper extends SQLiteOpenHelper
                         "(_id text primary key, " +
                         "content text," +
                         "date text," +
-                        "tweeter text)";
+                        "tweeterFirstName text," +
+                        "tweeterLastName text)";
         String userTable =
                 "CREATE TABLE tableUsers " +
                         "(_id text primary key, " +
@@ -70,6 +73,8 @@ public class DbHelper extends SQLiteOpenHelper
         values.put(PRIMARY_KEY, tweet._id);
         values.put(CONTENT, tweet.content);
         values.put(DATE, tweet.date);
+        values.put(TWEETERFN, tweet.tweeter.firstName);
+        values.put(TWEETERLN, tweet.tweeter.lastName);
 
         // Insert record
         db.insert(TABLE_TWEETS, null, values);
@@ -119,6 +124,8 @@ public class DbHelper extends SQLiteOpenHelper
                 tweet._id = cursor.getString(columnIndex++);
                 tweet.date = cursor.getString(columnIndex++);
                 tweet.content = cursor.getString(columnIndex++);
+                tweet.firstName = cursor.getString(columnIndex++);
+                tweet.lastName = cursor.getString(columnIndex++);
             }
         }
         finally {
@@ -190,6 +197,8 @@ public class DbHelper extends SQLiteOpenHelper
                 tweet._id = cursor.getString(columnIndex++);
                 tweet.content = cursor.getString(columnIndex++);
                 tweet.date = cursor.getString(columnIndex++);
+                tweet.firstName = cursor.getString(columnIndex++);
+                tweet.lastName = cursor.getString(columnIndex++);
                 columnIndex = 0;
 
                 if(tweet._id != "123" && tweet.content != null) {
@@ -272,6 +281,8 @@ public class DbHelper extends SQLiteOpenHelper
             values.put(PRIMARY_KEY, tweet._id);
             values.put(CONTENT, tweet.content);
             values.put(DATE, tweet.date);
+            values.put(TWEETERFN, tweet.tweeter.firstName);
+            values.put(TWEETERLN, tweet.tweeter.lastName);
             db.update("tableTweets", values, "_id" + "=?", new String[]{tweet._id});
         }
         catch (Exception e) {

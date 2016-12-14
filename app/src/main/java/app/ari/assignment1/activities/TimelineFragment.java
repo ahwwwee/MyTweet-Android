@@ -249,6 +249,8 @@ class TweetAdapter extends ArrayAdapter<Tweet> {
         TextView tweeter = (TextView) convertView.findViewById(R.id.tweeter);
         if(tweet.tweeter != null) {
             tweeter.setText(tweet.tweeter.firstName + " " + tweet.tweeter.lastName + " says...");
+        } else {
+            tweeter.setText(tweet.firstName + " " + tweet.lastName + " says...");
         }
 
         TextView listContent = (TextView) convertView.findViewById(R.id.listContent);
