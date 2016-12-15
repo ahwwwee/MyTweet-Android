@@ -73,9 +73,10 @@ public class DbHelper extends SQLiteOpenHelper
         values.put(PRIMARY_KEY, tweet._id);
         values.put(CONTENT, tweet.content);
         values.put(DATE, tweet.date);
-        values.put(TWEETERFN, tweet.tweeter.firstName);
-        values.put(TWEETERLN, tweet.tweeter.lastName);
-
+        if(tweet.tweeter != null) {
+            values.put(TWEETERFN, tweet.tweeter.firstName);
+            values.put(TWEETERLN, tweet.tweeter.lastName);
+        }
         // Insert record
         db.insert(TABLE_TWEETS, null, values);
         db.close();

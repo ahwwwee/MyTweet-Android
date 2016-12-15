@@ -88,4 +88,22 @@
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_alignTop="@+id/counter"
+        android:layout_alignLeft="@+id/counter"
+        android:layout_alignStart="@+id/welcome" />
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/imageButton"
+        android:background="@mipmap/ic_lens"
+        android:layout_alignTop="@+id/counter"
+        android:layout_alignLeft="@+id/imageView"
+        android:layout_alignStart="@+id/welcome"/>
+
 </RelativeLayout>

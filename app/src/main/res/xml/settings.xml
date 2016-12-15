@@ -16,12 +16,14 @@
 
     <EditTextPreference
         android:key="nmr_tweets"
+        android:defaultValue="10"
         android:summary="@string/nmr_tweets_summary"
         android:title="@string/nmr_tweets"
         android:inputType="text"/>
 
     <EditTextPreference
-        android:key="refresh_interval"
+        android:key="@string/refresh_interval_preference_key"
+        android:defaultValue="15"
         android:summary="@string/set_refresh_interval_summary"
         android:title="@string/set_refresh_interval"
         android:inputType="text"/>

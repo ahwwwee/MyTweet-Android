@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.ari.assignment1.activities.Timeline;
+import app.ari.assignment1.activities.TimelineFragment;
 import app.ari.assignment1.helper.DbHelper;
 
 /**
@@ -19,6 +21,7 @@ public class TweetList {
     public static List<User> users;
     public static List<User> allUsers;
     public DbHelper dbHelper;
+    public TimelineFragment timeline;
 
     /**
      * constructor for a Tweetlist. for keeping track of all of all tweets.
@@ -126,6 +129,7 @@ public class TweetList {
 
     public void refreshTweets(List<Tweet> tweets)
     {
+        timeline = TimelineFragment.getThis();
         dbHelper.deleteTweets();
         this.tweets.clear();
 
@@ -137,6 +141,7 @@ public class TweetList {
                 this.tweets.add(tweets.get(i));
             }
         }
+        timeline.refresh();
     }
 
     /**

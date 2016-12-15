@@ -20,10 +20,11 @@ import app.ari.assignment1.models.TweetList;
  */
 public class TweeterPager extends AppCompatActivity {
 
-    private PagerAdapter pagerAdapter;
+    public PagerAdapter pagerAdapter;
     private List<Tweet> tweets;
     private TweetList tweetList;
     private ViewPager viewPager;
+    private static TweeterPager pager;
 
     /**
      * Loads these when the activity is opened
@@ -37,12 +38,13 @@ public class TweeterPager extends AppCompatActivity {
         viewPager.setId(R.id.viewPager);
         setContentView(viewPager);
 
+        pager = this;
+
         setTweetList();
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tweets);
         viewPager.setAdapter(pagerAdapter);
 
         setCurrentItem();
-
     }
 
     private void setTweetList()
@@ -60,6 +62,10 @@ public class TweeterPager extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    public static TweeterPager get(){
+        return pager;
     }
 
     /**

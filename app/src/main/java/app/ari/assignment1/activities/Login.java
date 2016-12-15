@@ -51,6 +51,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Ca
 
         email = (TextView) findViewById(R.id.emailLog);
         password = (TextView) findViewById(R.id.passwordLog);
+        app.currentUser = null;
 
 
         Button button = (Button) findViewById(R.id.signIn);

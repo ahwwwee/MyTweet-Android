@@ -36,13 +36,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static app.ari.assignment1.helper.CameraHelper.showPhoto;
+import android.widget.ImageView;
+
 import static app.ari.assignment1.helper.ContactHelper.sendEmail;
 import static app.ari.assignment1.helper.Helper.navigateUp;
 
 /**
  * Created by Ari on 10/10/16.
  */
-public class TweeterFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher, Callback<Tweet> {
+public class TweeterFragment extends Fragment implements OnCheckedChangeListener, OnClickListener, TextWatcher, Callback<Tweet>, View.OnLongClickListener {
 
     public static   final String  EXTRA_TWEET_ID = "TWEET_ID";
     private static  final int REQUEST_CONTACT = 1;
@@ -62,6 +65,12 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     private User user;
     TextView welcome;
     public TweetAdapter tweetAdapter;
+    private static final int REQUEST_PHOTO = 0;
+    public TweeterPager tweeterPager;
+    public TweeterPager.PagerAdapter pagerAdapter;
+
+    private ImageView cameraButton;
+    private ImageView photoView;
 
     /**
      * Loads these when the activity is opened
@@ -78,7 +87,9 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         app = TweetApp.getApp();
         user = app.currentUser;
         tweetList = app.tweetList;
-        tweet = tweetList.getTweet(tweetId);
+        tweet = app.currentTweet;
+        tweeterPager = TweeterPager.get();
+        pagerAdapter = tweeterPager.pagerAdapter;
     }
 
     /**
@@ -120,6 +131,11 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         selectContact = (Button) v.findViewById(R.id.selectContact);
         emailTweet = (Button) v.findViewById(R.id.emailTweet);
         tweetTweet = (EditText) v.findViewById(R.id.tweetTweet);
+        cameraButton = (ImageView) v.findViewById(R.id.imageButton);
+        photoView = (ImageView) v.findViewById(R.id.imageView);
+
+        cameraButton.setOnClickListener(this);
+        photoView.setOnLongClickListener(this);
 
         tweetTweet.addTextChangedListener(this);
         tweetButton.setOnClickListener(this);
@@ -137,6 +153,9 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         tweetTweet.setText(tweet.content);
         date.setText(tweet.date);
         tweetTweet.setEnabled(false);
+        if(tweet.picture != null){
+            showPhoto(getActivity(), tweet, photoView);
+        }
     }
 
     /**
@@ -153,12 +172,14 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
             case R.id.settings:
                 if(tweetMessage.equals("") || tweet.content == null){
                     TweetList.tweets.remove(tweet);
+                    pagerAdapter.notifyDataSetChanged();
                 }
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             case android.R.id.home:
                 if(tweetMessage.equals("") || tweet.content == null){
                     TweetList.tweets.remove(tweet);
+                    pagerAdapter.notifyDataSetChanged();
                 }
                 navigateUp(getActivity());
                 return true;
@@ -190,13 +211,20 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         {
             return;
         }
-
         switch (requestCode)
         {
             case REQUEST_CONTACT:
                 String name = ContactHelper.getContact(getActivity(), data);
                 emailAddress = ContactHelper.getEmail(getActivity(), data);
                 selectContact.setText(emailAddress);
+                break;
+            case REQUEST_PHOTO:
+                String filename = data.getStringExtra(CameraActivity.EXTRA_PHOTO_FILENAME);
+                if (filename != null)
+                {
+                    tweet.picture = filename;
+                    showPhoto(getActivity(), tweet, photoView );
+                }
                 break;
         }
     }
@@ -260,12 +288,16 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                 toast.show();
                 if(tweetMessage.equals("")){
                     tweetList.deleteTweet(tweet);
+                    pagerAdapter.notifyDataSetChanged();
                     Toast toasty = Toast.makeText(getActivity(), "Tweet must have some content", Toast.LENGTH_SHORT);
                     toasty.show();
                 }
                 else{
                     tweetList.deleteTweet(tweet);
+                    pagerAdapter.notifyDataSetChanged();
                     tweet.content = tweetMessage;
+                    if(tweet.picture != null){
+                    }
                     tweet._id = null;
                     Call<Tweet> call = (Call<Tweet>) app.tweetService.createTweet(user._id, tweet);
                     call.enqueue(this);
@@ -283,17 +315,30 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                 }
                 sendEmail(getActivity(), emailAddress, app.currentUser.firstName + " has sent you a tweet", tweetMessage);
                 break;
+            case R.id.imageButton:
+                Intent ic = new Intent(getActivity(), CameraActivity.class);
+                startActivityForResult(ic, REQUEST_PHOTO);
+                break;
         }
     }
 
     @Override
     public void onResponse(Call<Tweet> call, Response<Tweet> response) {
         tweet = response.body();
-        tweetList.tweets.add(tweet);
+        tweetList.addTweet(tweet);
+        pagerAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onFailure(Call<Tweet> call, Throwable t) {
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        Intent i = new Intent(getActivity(), GalleryActivity.class);
+        i.putExtra(EXTRA_TWEET_ID, tweet._id);
+        startActivity(i);
+        return true;
     }
 }
 

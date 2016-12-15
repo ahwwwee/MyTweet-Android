@@ -108,6 +108,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         String newName = username.getText();
         String newPassword = password.getText();
         Toast toast;
+        String refreshIntervalKey = getActivity().getResources().getString(R.string.refresh_interval_preference_key);
+        if(key.equals(refreshIntervalKey)) {
+            getActivity().sendBroadcast(new Intent("app.ari.assignment1.activities.recievers.SEND_BROADCAST"));
+        }
         if(!newName.isEmpty()){
             user.firstName = newName;
             toast = Toast.makeText(getActivity(), "username changed to " + newName, Toast.LENGTH_SHORT);
@@ -116,10 +120,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if(!newPassword.isEmpty()) {
             user.password = newPassword;
             toast = Toast.makeText(getActivity(), "username changed to " + newPassword, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-        else{
-            toast = Toast.makeText(getActivity(), "You have changed a setting", Toast.LENGTH_SHORT);
             toast.show();
         }
     }

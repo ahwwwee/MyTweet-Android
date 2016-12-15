@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.Random;
+import android.graphics.Bitmap;
+
 
 /**
  * Created by Ari on 03/10/16.
@@ -17,11 +19,17 @@ public class Tweet {
     public User tweeter;
     public String firstName;
     public String lastName;
+    public String picture;
+    public Bitmap photo;
 
     /**
      * constructor for a new tweet
      */
     public Tweet(){
+    }
+
+    public void setPhoto(Bitmap photo){
+        this.photo = photo;
     }
 
 

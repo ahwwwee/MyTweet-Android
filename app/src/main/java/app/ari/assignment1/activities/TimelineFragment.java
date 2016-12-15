@@ -35,6 +35,9 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
+import android.content.BroadcastReceiver;
 
 /**
  * Created by Ari on 10/10/16.
@@ -46,6 +49,11 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
     public ListView timeline;
     private User user;
     private TweetList tweetList;
+    public static final String BROADCAST_ACTION = "app.ari.assignment1.activities.TimelineFragment";
+    private IntentFilter intentFilter;
+    protected static TimelineFragment timeFrag;
+
+
 
     /**
      * Loads these when the activity is opened
@@ -64,6 +72,8 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
             Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getFollowing(app.currentUser._id);
             call.enqueue(this);
         }
+        registerBroadcastReceiver();
+        timeFrag = this;
         adapter = new TweetAdapter(getActivity(), tweets);
         setListAdapter(adapter);
     }
@@ -84,9 +94,17 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         return v;
     }
 
+    private void registerBroadcastReceiver()
+    {
+        intentFilter = new IntentFilter(BROADCAST_ACTION);
+        ResponseReceiver responseReceiver = new ResponseReceiver();
+        // Registers the ResponseReceiver and its intent filters
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(responseReceiver, intentFilter);
+    }
+
     public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
         tweetList.refreshTweets(response.body());
-        adapter.notifyDataSetChanged();
+        refresh();
         app.tweetServiceAvailable = true;
     }
 
@@ -118,7 +136,7 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
     @Override
     public void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+        refresh();
         ((TweetAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
@@ -154,6 +172,7 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
             case R.id.newTweet:
                 if (app.tweetServiceAvailable == true) {
                     Tweet tweet = new Tweet();
+                    app.currentTweet = tweet;
                     tweet._id = "123";
                     tweetList.addTweet(tweet);
                     Intent i = new Intent(getActivity(), TweeterPager.class);
@@ -223,7 +242,29 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
             }
         }
         actionMode.finish();
+        refresh();
+    }
+
+    public void refresh(){
         adapter.notifyDataSetChanged();
+    }
+
+    public static TimelineFragment getThis(){
+        return timeFrag;
+    }
+
+    //Broadcast receiver for receiving status updates from the IntentService
+    private class ResponseReceiver extends BroadcastReceiver
+    {
+        //private void ResponseReceiver() {}
+        // Called when the BroadcastReceiver gets an Intent it's registered to receive
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            //refreshDonationList();
+            adapter.tweets = app.tweetList.tweets;
+            refresh();
+        }
     }
 }
 
@@ -232,10 +273,12 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
  */
 class TweetAdapter extends ArrayAdapter<Tweet> {
     private Context context;
+    List<Tweet> tweets;
 
     public TweetAdapter(Context context, List<Tweet> tweets) {
         super(context, 0, tweets);
         this.context = context;
+        this.tweets = tweets;
     }
 
     @SuppressLint("InflateParams")

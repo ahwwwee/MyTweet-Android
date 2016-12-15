@@ -12,6 +12,7 @@ import app.ari.assignment1.TweetService;
 import app.ari.assignment1.TweetServiceOpen;
 import app.ari.assignment1.helper.RetrofitServiceFactory;
 import app.ari.assignment1.models.Token;
+import app.ari.assignment1.models.Tweet;
 import app.ari.assignment1.models.User;
 import app.ari.assignment1.models.TweetList;
 import retrofit2.Call;
@@ -34,6 +35,7 @@ public class TweetApp extends Application {
     public User currentUser;
     public User userCurrent;
     protected static TweetApp app;
+    public Tweet currentTweet;
 
     /**
      * Loads these when the application is opened
