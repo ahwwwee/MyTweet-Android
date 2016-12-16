@@ -64,10 +64,6 @@ public class TweeterPager extends AppCompatActivity {
         }
     }
 
-    public static TweeterPager get(){
-        return pager;
-    }
-
     /**
      * populated the pagerAdapter which allows the user to scroll through the tweets
      */

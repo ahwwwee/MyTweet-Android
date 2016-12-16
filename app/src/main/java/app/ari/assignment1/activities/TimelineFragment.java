@@ -104,7 +104,7 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
 
     public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
         tweetList.refreshTweets(response.body());
-        refresh();
+        adapter.notifyDataSetChanged();
         app.tweetServiceAvailable = true;
     }
 
@@ -136,7 +136,7 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
     @Override
     public void onResume() {
         super.onResume();
-        refresh();
+        adapter.notifyDataSetChanged();
         ((TweetAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
@@ -173,11 +173,7 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
                 if (app.tweetServiceAvailable == true) {
                     Tweet tweet = new Tweet();
                     app.currentTweet = tweet;
-                    tweet._id = "123";
-                    tweetList.addTweet(tweet);
-                    Intent i = new Intent(getActivity(), TweeterPager.class);
-                    i.putExtra(TweeterFragment.EXTRA_TWEET_ID, tweet._id);
-                    startActivityForResult(i, 0);
+                    startActivity(new Intent(getActivity(), TweetActivity.class));
                 } else {
                     Toast toast = Toast.makeText(getActivity(), "Cannot make a tweet while offline", Toast.LENGTH_SHORT);
                     toast.show();
@@ -242,15 +238,15 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
             }
         }
         actionMode.finish();
-        refresh();
-    }
-
-    public void refresh(){
         adapter.notifyDataSetChanged();
     }
 
     public static TimelineFragment getThis(){
         return timeFrag;
+    }
+
+    public void refresh(){
+        adapter.notifyDataSetChanged();
     }
 
     //Broadcast receiver for receiving status updates from the IntentService
@@ -263,7 +259,7 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         {
             //refreshDonationList();
             adapter.tweets = app.tweetList.tweets;
-            refresh();
+            adapter.notifyDataSetChanged();
         }
     }
 }

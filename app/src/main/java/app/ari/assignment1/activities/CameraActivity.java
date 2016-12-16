@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,9 +16,13 @@ import android.widget.Toast;
 
 import static app.ari.assignment1.helper.FileIOHelper.writeBitmap;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.UUID;
 
 import app.ari.assignment1.R;
+import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.models.Tweet;
 
 /**
@@ -31,6 +36,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private static  final int CAMERA_RESULT = 5;
     public static final String EXTRA_PHOTO_FILENAME = "app.ari.photo.filename";
     private Bitmap Photo;
+    private TweetApp app;
+    public String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_camera);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        app = TweetApp.getApp();
 
         Image = (ImageView) findViewById(R.id.Image);
         savePhoto = (Button)findViewById(R.id.savePhoto);
@@ -64,7 +72,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         switch(view.getId()) {
             case R.id.takePhoto     : onTakePhotoClicked(view);
                 break;
-            case R.id.savePhoto     : onPictureTaken(Photo);
+            case R.id.savePhoto     :
+                try {
+                    onPictureTaken(Photo);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -83,12 +96,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         savePhoto.setEnabled(true);
     }
 
-    private void onPictureTaken(Bitmap data) {
+    private void onPictureTaken(Bitmap data) throws Exception {
         String filename = UUID.randomUUID().toString() + ".png";
         if (writeBitmap(this, filename, data) == true) {
             Intent intent = new Intent();
             intent.putExtra(EXTRA_PHOTO_FILENAME, filename);
             setResult(Activity.RESULT_OK, intent);
+            path = filename;
+            setTweetPhoto(data);
         }
         else {
             setResult(Activity.RESULT_CANCELED);
@@ -114,14 +129,22 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void processImage(Intent data)
-    {
+    private void processImage(Intent data) {
         Photo = (Bitmap) data.getExtras().get("data");
         if(Photo == null)
         {
             Toast.makeText(this, "Attempt to take photo did not succeed", Toast.LENGTH_SHORT).show();
         }
         Image.setImageBitmap(Photo);
+    }
+
+    public void setTweetPhoto(Bitmap data) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        data.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        app.currentTweet.picture = encoded;
     }
 
 }

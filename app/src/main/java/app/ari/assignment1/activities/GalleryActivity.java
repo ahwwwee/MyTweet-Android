@@ -16,15 +16,13 @@ import static app.ari.assignment1.helper.CameraHelper.showPhoto;
 /**
  * Created by ictskills on 14/12/16.
  */
-public class GalleryActivity extends AppCompatActivity
-{
+public class GalleryActivity extends AppCompatActivity {
 
-    public static   final String  EXTRA_PHOTO_FILENAME = "org.wit.myrent.photo.filename";
+    public static final String EXTRA_PHOTO_FILENAME = "app.ari.assignment1.picture.filename";
     private ImageView photoView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
         photoView = (ImageView) findViewById(R.id.GalleryImage);
@@ -33,18 +31,16 @@ public class GalleryActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case android.R.id.home  : onBackPressed();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home :
+                onBackPressed();
                 return true;
-            default                 : return super.onOptionsItemSelected(item);
+            default : return super.onOptionsItemSelected(item);
         }
     }
 
-    private void showPicture()
-    {
+    private void showPicture() {
         String tweetId = (String)getIntent().getSerializableExtra(TweeterFragment.EXTRA_TWEET_ID);
         TweetApp app = (TweetApp) getApplication();
         TweetList tweetlist = app.tweetList;

@@ -20,17 +20,11 @@ public class Tweet {
     public String firstName;
     public String lastName;
     public String picture;
-    public Bitmap photo;
+    public String photo;
 
     /**
      * constructor for a new tweet
      */
     public Tweet(){
     }
-
-    public void setPhoto(Bitmap photo){
-        this.photo = photo;
-    }
-
-
 }

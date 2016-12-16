@@ -82,14 +82,16 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        String tweetId = (String)getArguments().getSerializable(EXTRA_TWEET_ID);
 
         app = TweetApp.getApp();
         user = app.currentUser;
         tweetList = app.tweetList;
-        tweet = app.currentTweet;
-        tweeterPager = TweeterPager.get();
-        pagerAdapter = tweeterPager.pagerAdapter;
+        if (getArguments() != null) {
+            String tweetId = (String) getArguments().getSerializable(EXTRA_TWEET_ID);
+            tweet = tweetList.getTweet(tweetId);
+        } else {
+            tweet = app.currentTweet;
+        }
     }
 
     /**
@@ -205,8 +207,9 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
      * @param data
      */
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        Bundle bundle = data.getExtras();
+
         if (resultCode != Activity.RESULT_OK)
         {
             return;
@@ -222,7 +225,8 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                 String filename = data.getStringExtra(CameraActivity.EXTRA_PHOTO_FILENAME);
                 if (filename != null)
                 {
-                    tweet.picture = filename;
+                    tweet.photo = filename;
+                    app.currentTweet = tweet;
                     showPhoto(getActivity(), tweet, photoView );
                 }
                 break;
@@ -258,8 +262,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-    {
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     }
 
     /**
@@ -279,8 +282,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
      * @param v
      */
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         tweetMessage = this.tweetTweet.getText().toString();
         switch (v.getId()){
             case (R.id.tweetButton):
@@ -293,10 +295,12 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                     toasty.show();
                 }
                 else{
+                    tweet = app.currentTweet;
                     tweetList.deleteTweet(tweet);
-                    pagerAdapter.notifyDataSetChanged();
                     tweet.content = tweetMessage;
                     if(tweet.picture != null){
+                        Toast toasty = Toast.makeText(getActivity(), "Wooooo. Picture time", Toast.LENGTH_SHORT);
+                        toasty.show();
                     }
                     tweet._id = null;
                     Call<Tweet> call = (Call<Tweet>) app.tweetService.createTweet(user._id, tweet);
@@ -326,7 +330,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public void onResponse(Call<Tweet> call, Response<Tweet> response) {
         tweet = response.body();
         tweetList.addTweet(tweet);
-        pagerAdapter.notifyDataSetChanged();
     }
 
     @Override
