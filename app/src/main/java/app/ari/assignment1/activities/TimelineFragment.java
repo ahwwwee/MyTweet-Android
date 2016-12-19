@@ -1,12 +1,9 @@
 package app.ari.assignment1.activities;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import app.ari.assignment1.activities.settings.SettingsActivity;
-import app.ari.assignment1.helper.Helper;
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.models.TweetList;
@@ -26,14 +23,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
@@ -52,6 +47,7 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
     public static final String BROADCAST_ACTION = "app.ari.assignment1.activities.TimelineFragment";
     private IntentFilter intentFilter;
     protected static TimelineFragment timeFrag;
+    public CameraActivity camera;
 
 
 
@@ -103,7 +99,16 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
     }
 
     public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
-        tweetList.refreshTweets(response.body());
+        List<Tweet> array = new ArrayList<>();
+        for(Tweet t : response.body()){
+            if(t.picture != null){
+                t = app.nodeImageConvert(t);
+                array.add(t);
+            }else{
+                array.add(t);
+            }
+        }
+        tweetList.refreshTweets(array);
         adapter.notifyDataSetChanged();
         app.tweetServiceAvailable = true;
     }

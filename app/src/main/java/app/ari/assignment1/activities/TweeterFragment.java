@@ -82,7 +82,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-
         app = TweetApp.getApp();
         user = app.currentUser;
         tweetList = app.tweetList;
@@ -181,7 +180,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
             case android.R.id.home:
                 if(tweetMessage.equals("") || tweet.content == null){
                     TweetList.tweets.remove(tweet);
-                    pagerAdapter.notifyDataSetChanged();
                 }
                 navigateUp(getActivity());
                 return true;
@@ -227,7 +225,8 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                 {
                     tweet.photo = filename;
                     app.currentTweet = tweet;
-                    showPhoto(getActivity(), tweet, photoView );
+
+                    //showPhoto(getActivity(), tweet, photoView );
                 }
                 break;
         }
@@ -302,7 +301,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                         Toast toasty = Toast.makeText(getActivity(), "Wooooo. Picture time", Toast.LENGTH_SHORT);
                         toasty.show();
                     }
-                    tweet._id = null;
                     Call<Tweet> call = (Call<Tweet>) app.tweetService.createTweet(user._id, tweet);
                     call.enqueue(this);
                 }

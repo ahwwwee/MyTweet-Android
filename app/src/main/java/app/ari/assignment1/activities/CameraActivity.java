@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Camera;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -38,6 +40,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private Bitmap Photo;
     private TweetApp app;
     public String path;
+    public static CameraActivity camera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         takePhoto = (Button)findViewById(R.id.takePhoto);
         savePhoto.setOnClickListener(this);
         takePhoto.setOnClickListener(this);
+    }
+
+    public CameraActivity getIt(){
+        camera = this;
+        return camera;
     }
 
     @Override
@@ -143,8 +151,24 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         data.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
-        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        app.currentTweet.picture = encoded;
+        //Base64 encoded = Base64.encodeBytes(byteArray);
+        app.currentTweet.picture = data;
+    }
+
+    public Tweet nodeImageConvert(Tweet tweet){
+        byte[] array = Base64.decode(tweet.picture.toString(), Base64.URL_SAFE);
+        Bitmap decoded = BitmapFactory.decodeByteArray(array, 0, array.length);
+        String filename = UUID.randomUUID().toString() + ".png";
+        if (writeBitmap(this, filename, decoded) == true) {
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_PHOTO_FILENAME, filename);
+            setResult(Activity.RESULT_OK, intent);
+            tweet.photo = filename;
+        }
+        else {
+            setResult(Activity.RESULT_CANCELED);
+        }
+        return tweet;
     }
 
 }

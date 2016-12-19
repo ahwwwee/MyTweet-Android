@@ -1,25 +1,29 @@
 package app.ari.assignment1.app;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.List;
+import java.util.UUID;
 
 import app.ari.assignment1.TweetService;
 import app.ari.assignment1.TweetServiceOpen;
-import app.ari.assignment1.helper.RetrofitServiceFactory;
-import app.ari.assignment1.models.Token;
+import app.ari.assignment1.activities.CameraActivity;
 import app.ari.assignment1.models.Tweet;
 import app.ari.assignment1.models.User;
 import app.ari.assignment1.models.TweetList;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static app.ari.assignment1.helper.FileIOHelper.writeBitmap;
 
 /**
  * Created by Ari on 27/09/16.
@@ -36,6 +40,7 @@ public class TweetApp extends Application {
     public User userCurrent;
     protected static TweetApp app;
     public Tweet currentTweet;
+    public CameraActivity camera;
 
     /**
      * Loads these when the application is opened
@@ -132,5 +137,13 @@ public class TweetApp extends Application {
     {
         Toast toast = Toast.makeText(this, "Tweet Contacted Successfully", Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    public Tweet nodeImageConvert(Tweet tweet){
+        /*byte[] array = Base64.decode(tweet.picture.toString().getBytes(), Base64.DEFAULT);
+        Bitmap decoded = BitmapFactory.decodeByteArray(array, 0, array.length);*/
+        String filename = UUID.randomUUID().toString() + ".png";
+        tweet.photo = filename;
+        return tweet;
     }
 }

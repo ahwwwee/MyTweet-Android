@@ -63,7 +63,7 @@ public class TweetList {
             dbHelper.addTweet(tweet);
             return;
         }
-    }
+     }
 
     /**
      * finds the tweet in the arrayList

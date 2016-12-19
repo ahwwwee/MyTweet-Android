@@ -3,9 +3,11 @@ package app.ari.assignment1.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Random;
 import android.graphics.Bitmap;
+import android.util.Base64;
 
 
 /**
@@ -19,7 +21,7 @@ public class Tweet {
     public User tweeter;
     public String firstName;
     public String lastName;
-    public String picture;
+    public Bitmap picture;
     public String photo;
 
     /**
