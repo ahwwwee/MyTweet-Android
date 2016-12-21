@@ -16,6 +16,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import static app.ari.assignment1.helper.FileIOHelper.writeBitmap;
 
 import java.io.ByteArrayOutputStream;
@@ -146,24 +153,35 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         Image.setImageBitmap(Photo);
     }
 
-    public void setTweetPhoto(Bitmap data) {
+    public void setTweetPhoto(Bitmap data) throws JSONException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         data.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
-        //Base64 encoded = Base64.encodeBytes(byteArray);
-        app.currentTweet.picture = data;
+        JSONArray array = new JSONArray();
+        array.put(byteArray);
+        /*int i = 0;
+        Byte[] byteByte = new Byte[byteArray.length];
+        for (byte b : byteArray){
+            byteByte[i++] = b;
+        }
+        */
+        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+        JSONObject json = new JSONObject();
+        json.put("data", byteArray);
+        app.currentTweet.picture = json;
     }
 
     public Tweet nodeImageConvert(Tweet tweet){
-        byte[] array = Base64.decode(tweet.picture.toString(), Base64.URL_SAFE);
+        byte[] array = Base64.decode(tweet.picture.toString(), Base64.DEFAULT);
         Bitmap decoded = BitmapFactory.decodeByteArray(array, 0, array.length);
         String filename = UUID.randomUUID().toString() + ".png";
         if (writeBitmap(this, filename, decoded) == true) {
             Intent intent = new Intent();
             intent.putExtra(EXTRA_PHOTO_FILENAME, filename);
             setResult(Activity.RESULT_OK, intent);
-            tweet.photo = filename;
+            tweet.path = filename;
         }
         else {
             setResult(Activity.RESULT_CANCELED);

@@ -154,7 +154,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         tweetTweet.setText(tweet.content);
         date.setText(tweet.date);
         tweetTweet.setEnabled(false);
-        if(tweet.picture != null){
+        if(tweet.path != null){
             showPhoto(getActivity(), tweet, photoView);
         }
     }
@@ -223,7 +223,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                 String filename = data.getStringExtra(CameraActivity.EXTRA_PHOTO_FILENAME);
                 if (filename != null)
                 {
-                    tweet.photo = filename;
+                    tweet.path = filename;
                     app.currentTweet = tweet;
 
                     //showPhoto(getActivity(), tweet, photoView );
@@ -287,24 +287,19 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
             case (R.id.tweetButton):
                 Toast toast = Toast.makeText(getActivity(), "Tweet Sent", Toast.LENGTH_SHORT);
                 toast.show();
-                if(tweetMessage.equals("")){
+                if(!tweetMessage.equals("") || app.currentTweet.picture != null){
+                    tweet = app.currentTweet;
+                    tweetList.deleteTweet(tweet);
+                    tweet.content = tweetMessage;
+                    Call<Tweet> call = (Call<Tweet>) app.tweetService.createTweet(user._id, tweet);
+                    call.enqueue(this);
+                }
+                else{
                     tweetList.deleteTweet(tweet);
                     pagerAdapter.notifyDataSetChanged();
                     Toast toasty = Toast.makeText(getActivity(), "Tweet must have some content", Toast.LENGTH_SHORT);
                     toasty.show();
                 }
-                else{
-                    tweet = app.currentTweet;
-                    tweetList.deleteTweet(tweet);
-                    tweet.content = tweetMessage;
-                    if(tweet.picture != null){
-                        Toast toasty = Toast.makeText(getActivity(), "Wooooo. Picture time", Toast.LENGTH_SHORT);
-                        toasty.show();
-                    }
-                    Call<Tweet> call = (Call<Tweet>) app.tweetService.createTweet(user._id, tweet);
-                    call.enqueue(this);
-                }
-                startActivity(new Intent(getActivity(), Timeline.class));
                 break;
             case (R.id.selectContact):
                 Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
@@ -326,12 +321,20 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
 
     @Override
     public void onResponse(Call<Tweet> call, Response<Tweet> response) {
-        tweet = response.body();
-        tweetList.addTweet(tweet);
+        if(response.body() != null) {
+            tweet = response.body();
+            tweetList.addTweet(tweet);
+        }
+        startActivity(new Intent(getActivity(), Timeline.class));
+
     }
 
     @Override
     public void onFailure(Call<Tweet> call, Throwable t) {
+        Toast toasty = Toast.makeText(getActivity(), "an error occured", Toast.LENGTH_SHORT);
+        toasty.show();
+        startActivity(new Intent(getActivity(), Timeline.class));
+
     }
 
     @Override

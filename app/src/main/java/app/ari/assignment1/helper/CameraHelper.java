@@ -22,7 +22,7 @@ public class CameraHelper
      */
     public static void showPhoto(Activity activity, Tweet tweet, ImageView photoView)
     {
-        String path = activity.getFileStreamPath(tweet.photo).getAbsolutePath();
+        String path = activity.getFileStreamPath(tweet.path).getAbsolutePath();
         BitmapDrawable b = getScaledDrawable(activity, path);
         if (b != null)
             photoView.setImageDrawable(b);

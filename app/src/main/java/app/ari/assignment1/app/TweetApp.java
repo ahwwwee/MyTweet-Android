@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.UUID;
 
@@ -143,7 +145,14 @@ public class TweetApp extends Application {
         /*byte[] array = Base64.decode(tweet.picture.toString().getBytes(), Base64.DEFAULT);
         Bitmap decoded = BitmapFactory.decodeByteArray(array, 0, array.length);*/
         String filename = UUID.randomUUID().toString() + ".png";
-        tweet.photo = filename;
+        tweet.path = filename;
+        /*Bitmap pic = tweet.picture;
+        int size = pic.getHeight() * pic.getWidth();
+        ByteBuffer buffer = ByteBuffer.allocate(size);
+        pic.copyPixelsFromBuffer(buffer);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        pic.compress(Bitmap.CompressFormat.PNG, 50, bos);
+        tweet.picture = pic;*/
         return tweet;
     }
 }

@@ -1,13 +1,14 @@
 package app.ari.assignment1.models;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.nio.ByteBuffer;
-import java.util.Date;
-import java.util.Random;
 import android.graphics.Bitmap;
 import android.util.Base64;
+
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 /**
@@ -21,8 +22,9 @@ public class Tweet {
     public User tweeter;
     public String firstName;
     public String lastName;
-    public Bitmap picture;
-    public String photo;
+    public JSONObject picture;
+    public byte[] data;
+    public String path;
 
     /**
      * constructor for a new tweet
