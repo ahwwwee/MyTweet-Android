@@ -153,7 +153,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public void updateControls(Tweet tweet)
     {
         if(tweet.content.equals("")){
-            tweetTweet.setText(" ");
+            tweetTweet.setText(tweet.path);
         }else {
             tweetTweet.setText(tweet.content);
         }

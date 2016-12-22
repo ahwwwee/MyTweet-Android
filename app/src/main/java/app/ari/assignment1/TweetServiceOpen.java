@@ -11,7 +11,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
- * Created by ictskills on 01/12/16.
+ * Created by Ari on 01/12/16.
+ * Interface to access the api on the node application on Heroku
  */
 public interface TweetServiceOpen {
 

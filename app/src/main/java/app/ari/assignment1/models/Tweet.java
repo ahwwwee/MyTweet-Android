@@ -20,12 +20,12 @@ public class Tweet {
     public String content;
     public String date;
     public User tweeter;
-    public String firstName;
-    public String lastName;
     public Picture picture;
     public byte[] data;
     public String path;
     public Bitmap bmp;
+    public String firstName;
+    public String lastName;
 
     /**
      * constructor for a new tweet

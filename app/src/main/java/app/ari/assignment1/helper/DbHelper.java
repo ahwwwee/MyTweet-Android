@@ -15,7 +15,8 @@ import app.ari.assignment1.models.Tweet;
 import app.ari.assignment1.models.User;
 
 /**
- * Created by ictskills on 24/11/16.
+ * Created by Ari on 24/11/16.
+ * Used to persist Tweets and One User at a time.
  */
 public class DbHelper extends SQLiteOpenHelper
 {
@@ -28,6 +29,7 @@ public class DbHelper extends SQLiteOpenHelper
     static final String PRIMARY_KEY = "_id";
     static final String CONTENT = "content";
     static final String DATE = "date";
+    static final String PATH = "path";
     static final String TWEETERFN = "tweeterFirstName";
     static final String TWEETERLN = "tweeterLastName";
     static final String FIRSTNAME = "firstName";
@@ -37,11 +39,19 @@ public class DbHelper extends SQLiteOpenHelper
 
     Context context;
 
+    /**
+     * constructor for database
+     * @param context
+     */
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
 
+    /**
+     * On load of database these tables are created
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String tweetTable =
@@ -49,6 +59,7 @@ public class DbHelper extends SQLiteOpenHelper
                         "(_id text primary key, " +
                         "content text," +
                         "date text," +
+                        "path text," +
                         "tweeterFirstName text," +
                         "tweeterLastName text)";
         String userTable =
@@ -73,6 +84,7 @@ public class DbHelper extends SQLiteOpenHelper
         values.put(PRIMARY_KEY, tweet._id);
         values.put(CONTENT, tweet.content);
         values.put(DATE, tweet.date);
+        values.put(PATH, tweet.path);
         if(tweet.tweeter != null) {
             values.put(TWEETERFN, tweet.tweeter.firstName);
             values.put(TWEETERLN, tweet.tweeter.lastName);
@@ -82,6 +94,9 @@ public class DbHelper extends SQLiteOpenHelper
         db.close();
     }
 
+    /**
+     * @param user Reference to User object to be added to database
+     */
     public void addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -109,6 +124,11 @@ public class DbHelper extends SQLiteOpenHelper
         }
     }
 
+    /**
+     * allows one to select a tweet by its id
+     * @param id
+     * @return
+     */
     public Tweet selectTweet(String id) {
         Tweet tweet;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -124,6 +144,7 @@ public class DbHelper extends SQLiteOpenHelper
                 cursor.moveToFirst();
                 tweet._id = cursor.getString(columnIndex++);
                 tweet.date = cursor.getString(columnIndex++);
+                tweet.path = cursor.getString(columnIndex++);
                 tweet.content = cursor.getString(columnIndex++);
                 tweet.firstName = cursor.getString(columnIndex++);
                 tweet.lastName = cursor.getString(columnIndex++);
@@ -135,6 +156,11 @@ public class DbHelper extends SQLiteOpenHelper
         return tweet;
     }
 
+    /**
+     * allows one to select a user by its id
+     * @param id
+     * @return
+     */
     public User selectUser(String id) {
         User user;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -161,28 +187,8 @@ public class DbHelper extends SQLiteOpenHelper
         return user;
     }
 
-    public void deleteTweet(Tweet tweet) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            db.delete("tableTweets", "_id" + "=?", new String[]{tweet._id});
-        }
-        catch (Exception e) {
-            Log.d(TAG, "delete tweet failure: " + e.getMessage());
-        }
-    }
-
-    public void deleteUser(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            db.delete("tableUsers", "_id" + "=?", new String[]{user._id});
-        }
-        catch (Exception e) {
-            Log.d(TAG, "delete user failure: " + e.getMessage());
-        }
-    }
-
     /**
-     * Query database and select entire tableResidences.
+     * Query database and select entire tableTweets.
      *
      * @return A list of Tweet object records
      */
@@ -198,6 +204,7 @@ public class DbHelper extends SQLiteOpenHelper
                 tweet._id = cursor.getString(columnIndex++);
                 tweet.content = cursor.getString(columnIndex++);
                 tweet.date = cursor.getString(columnIndex++);
+                tweet.path = cursor.getString(columnIndex++);
                 tweet.firstName = cursor.getString(columnIndex++);
                 tweet.lastName = cursor.getString(columnIndex++);
                 columnIndex = 0;
@@ -211,6 +218,23 @@ public class DbHelper extends SQLiteOpenHelper
         return tweets;
     }
 
+    /**
+     * method to delete tweet found by its id
+     */
+    public void deleteTweet(Tweet tweet){
+        SQLiteDatabase db = this.getWritableDatabase();
+        try{
+            db.delete("tableTweets", "_id" + "=?", new String[]{tweet._id});
+        } catch (Exception e){
+            Log.d(TAG, "delete tweet failure: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Query database and select entire tableUsers.
+     *
+     * @return A list of user object records
+     */
     public List<User> selectUsers() {
         List<User> users = new ArrayList<User>();
         String query = "SELECT * FROM " + "tableUsers";
@@ -235,7 +259,7 @@ public class DbHelper extends SQLiteOpenHelper
     }
 
     /**
-     * Delete all records
+     * Delete all records of tweetsa
      */
     public void deleteTweets() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -282,25 +306,10 @@ public class DbHelper extends SQLiteOpenHelper
             values.put(PRIMARY_KEY, tweet._id);
             values.put(CONTENT, tweet.content);
             values.put(DATE, tweet.date);
+            values.put(PATH, tweet.path);
             values.put(TWEETERFN, tweet.tweeter.firstName);
             values.put(TWEETERLN, tweet.tweeter.lastName);
             db.update("tableTweets", values, "_id" + "=?", new String[]{tweet._id});
-        }
-        catch (Exception e) {
-            Log.d(TAG, "update tweets failure: " + e.getMessage());
-        }
-    }
-
-    public void updateUser(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            ContentValues values = new ContentValues();
-            values.put(PRIMARY_KEY, user._id);
-            values.put(FIRSTNAME, user.firstName);
-            values.put(LASTNAME, user.lastName);
-            values.put(EMAIL, user.email);
-            values.put(PASSWORD, user.password);
-            db.update("tableTweets", values, "_id" + "=?", new String[]{user._id});
         }
         catch (Exception e) {
             Log.d(TAG, "update tweets failure: " + e.getMessage());

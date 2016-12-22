@@ -17,13 +17,16 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * Created by ictskills on 22/12/16.
+ * Created by Ari on 22/12/16.
+ * class to represent the data being taken from the mongoose database
  */
 public class Picture {
-    public Object picData;
     public HashMap data;
     public String contentType;
 
+    /**
+     * constructor for a new picture
+     */
     public Picture(){
     }
 }

@@ -7,9 +7,17 @@ import java.io.ByteArrayOutputStream;
 import android.graphics.Bitmap;
 
 /**
- * Created by ictskills on 14/12/16.
+ * Created by Ari on 14/12/16.
  */
 public class FileIOHelper {
+
+    /**
+     * checks that the photo can be accessed
+     * @param context
+     * @param filename
+     * @param data
+     * @return
+     */
     public static boolean write(Context context, String filename, byte[] data)
     {
         FileOutputStream os = null;
@@ -38,6 +46,9 @@ public class FileIOHelper {
         return success;
     }
 
+    /**
+     * returns a byte array for the bitmap that is passed in
+     */
     public static byte[] byteArray(Bitmap bmp)
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -45,6 +56,13 @@ public class FileIOHelper {
         return stream.toByteArray();
     }
 
+    /**
+     * checks that the photo is accessable
+     * @param context
+     * @param filename
+     * @param bmp
+     * @return
+     */
     public static boolean writeBitmap(Context context, String filename, Bitmap bmp)
     {
         return write(context, filename, byteArray(bmp));

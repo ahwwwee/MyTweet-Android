@@ -12,7 +12,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
- * Created by Dan & Ursula on 11/23/2016.
+ * Created by Ari on 11/23/2016.
+ * Interface to access protected api routes on the node application on Heroku
  */
 public interface TweetService {
 

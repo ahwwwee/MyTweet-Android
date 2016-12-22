@@ -35,7 +35,8 @@ import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.models.Tweet;
 
 /**
- * Created by ictskills on 14/12/16.
+ * Created by Ari on 14/12/16.
+ * Activity to access the camera application on device
  */
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,6 +50,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public String path;
     public static CameraActivity camera;
 
+    /**
+     * Loads these when the activity is opened
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,11 +69,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         takePhoto.setOnClickListener(this);
     }
 
-    public CameraActivity getIt(){
-        camera = this;
-        return camera;
-    }
-
+    /**
+     * a listener method for menu bar. used for the back/ up button
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -82,6 +87,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * method for onClickListener for the two buttons on the page
+     * @param view
+     */
     @Override
     public void onClick(View view) {
 
@@ -98,6 +107,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * method for when takePhoto button is clicked. Opens the camera application if available.
+     * @param v
+     */
     public void onTakePhotoClicked(View v)
     {
         // Check for presence of device camera. If not present advise user and quit method.
@@ -111,6 +124,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         savePhoto.setEnabled(true);
     }
 
+    /**
+     * method for when savePhoto button is clicked. adds filename into intent and adds this to result
+     * @param data
+     * @throws Exception
+     */
     private void onPictureTaken(Bitmap data) throws Exception {
         String filename = UUID.randomUUID().toString() + ".png";
         if (writeBitmap(this, filename, data) == true) {
@@ -126,6 +144,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         finish();
     }
 
+    /**
+     * invoked when the camera has taken an image. checks if it was successfull or not.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -133,17 +157,22 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         switch (requestCode)
         {
             case CameraActivity.CAMERA_RESULT :
-                if(data != null) {
+                if(data.getExtras() != null) {
                     processImage(data);
                 }
                 else {
-                    Toast.makeText(this, "Camera failure: check simulated camera present emulator advanced settings",
+                    Toast.makeText(this, "Camera failure",
                             Toast.LENGTH_LONG).show();
                 }
                 break;
         }
     }
 
+    /**
+     * successfully taken an image.
+     * sets this image to the image view on activity.
+     * @param data
+     */
     private void processImage(Intent data) {
         Photo = (Bitmap) data.getExtras().get("data");
         if(Photo == null)
@@ -153,26 +182,16 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         Image.setImageBitmap(Photo);
     }
 
+    /**
+     * sets the image byte array to the tweet.data to be uploaded to node api.
+     * @param data
+     * @throws JSONException
+     */
     public void setTweetPhoto(Bitmap data) throws JSONException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         data.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         app.currentTweet.data = byteArray;
-    }
-
-    public Tweet nodeImageConvert(Tweet tweet){
-        Bitmap decoded = BitmapFactory.decodeByteArray(tweet.data, 0, tweet.data.length);
-        String filename = UUID.randomUUID().toString() + ".png";
-        if (writeBitmap(this, filename, decoded) == true) {
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_PHOTO_FILENAME, filename);
-            setResult(Activity.RESULT_OK, intent);
-            tweet.path = filename;
-        }
-        else {
-            setResult(Activity.RESULT_CANCELED);
-        }
-        return tweet;
     }
 
 }

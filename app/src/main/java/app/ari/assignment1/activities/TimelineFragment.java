@@ -98,6 +98,11 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(responseReceiver, intentFilter);
     }
 
+    /**
+     * response from successful call with list of tweets.
+     * @param call
+     * @param response
+     */
     public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
         List<Tweet> array = new ArrayList<>();
         for(Tweet t : response.body()){
@@ -113,6 +118,11 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         app.tweetServiceAvailable = true;
     }
 
+    /**
+     * responce from an unsuccessful call for a list of tweets
+     * @param call
+     * @param t
+     */
     @Override
     public void onFailure(Call<List<Tweet>> call, Throwable t) {
         Toast toast = Toast.makeText(getActivity(), "Connection error, unable to retrieve tweets", Toast.LENGTH_SHORT);
@@ -246,6 +256,10 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * to make methods from this class accessable elsewhere from a static context
+     * @return
+     */
     public static TimelineFragment getThis(){
         return timeFrag;
     }

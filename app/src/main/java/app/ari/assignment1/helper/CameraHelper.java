@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import app.ari.assignment1.models.Tweet;
 
 /**
- * Created by ictskills on 14/12/16.
+ * Created by Ari on 14/12/16.
  */
 public class CameraHelper
 {

@@ -98,6 +98,11 @@ public class TweetApp extends Application {
     }
 
 
+    /**
+     * getter for users by email value
+     * @param email
+     * @return
+     */
     public User findByEmail(String email){
         for(User u: tweetList.users){
             if(email.equals(u.email)){
@@ -107,6 +112,11 @@ public class TweetApp extends Application {
         return null;
     }
 
+    /**
+     * getter for users by ID value
+     * @param id
+     * @return
+     */
     public User findById(String id){
         for(User u: tweetList.users){
             if(id.equals(u._id)){
@@ -124,68 +134,52 @@ public class TweetApp extends Application {
         return app;
     }
 
-    /*@Override
-    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-        serviceAvailableMessage();
-        for(User u : response.body()) {
-            app.tweetList.addUser(u);
-        }
-        tweetServiceAvailable = true;
-    }
 
-    @Override
-    public void onFailure(Call<List<User>> call, Throwable t) {
-        serviceUnavailableMessage();
-        tweetServiceAvailable = false;
-    }*/
-
+    /**
+     * setter for boolean controlling network conectivity
+     */
     public void serviceUnavailableMessage()
     {
         Toast toast = Toast.makeText(this, "Tweet Service Unavailable. Only local information available", Toast.LENGTH_LONG);
         toast.show();
     }
 
+    /**
+     * setter for boolean controlling network conectivity
+     */
     public void serviceAvailableMessage()
     {
         Toast toast = Toast.makeText(this, "Tweet Contacted Successfully", Toast.LENGTH_LONG);
         toast.show();
     }
 
+    /**
+     * converting images not taken on the app to readable files
+     * @param tweet
+     * @return
+     */
     public Tweet nodeImageConvert(Tweet tweet) {
-        /*try {
-            String obj = tweet.picture.getString("data");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
         String filename = UUID.randomUUID().toString() + ".png";
         if(tweet.path == null){
             tweet.path = filename;
         }
+        /*attempting to decode images coming from node application*/
         if(tweet.picture != null){
             Object array = tweet.picture.data.get("data");
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutput out =null;
+            ObjectOutput out = null;
             try {
                 out = new ObjectOutputStream(bos);
                 out.writeObject(array);
                 out.flush();
-                tweet.data = bos.toByteArray();
+                byte[] bytes = bos.toByteArray();
+                //byte[] decoded = Base64.decode(bytes.toString(), Base64.URL_SAFE);
+                tweet.data = bytes;
                 tweet.bmp = BitmapFactory.decodeByteArray(tweet.data, 0, tweet.data.length);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-
-        /*
-        */
-        /*Bitmap pic = tweet.picture;
-        int size = pic.getHeight() * pic.getWidth();
-        ByteBuffer buffer = ByteBuffer.allocate(size);
-        pic.copyPixelsFromBuffer(buffer);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        pic.compress(Bitmap.CompressFormat.PNG, 50, bos);
-        tweet.picture = pic;*/
 
         return tweet;
     }
