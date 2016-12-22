@@ -22,6 +22,7 @@ public class TweetList {
     public static List<User> allUsers;
     public DbHelper dbHelper;
     public TimelineFragment timeline;
+    public int tweetLimit = 10;
 
     /**
      * constructor for a Tweetlist. for keeping track of all of all tweets.
@@ -134,10 +135,14 @@ public class TweetList {
         this.tweets.clear();
 
         dbHelper.addTweets(tweets);
+        int j = tweetLimit;
+        if (tweets.size() < tweetLimit){
+            j = tweets.size();
+        }
 
 
         if (tweets != null) {
-            for (int i = 0; i < tweets.size(); i += 1) {
+            for (int i = 0; i < j; i += 1) {
                 this.tweets.add(tweets.get(i));
             }
         }

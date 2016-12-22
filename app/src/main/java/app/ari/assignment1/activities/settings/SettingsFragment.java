@@ -27,6 +27,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private SharedPreferences prefs;
     public EditTextPreference username;
     public EditTextPreference password;
+    public EditTextPreference tweetLimit;
     public User user;
     private TweetApp app;
     private TweetList tweetList;
@@ -45,6 +46,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         user = app.currentUser;
         username = (EditTextPreference) findPreference("username");
         password = (EditTextPreference) findPreference("password");
+        tweetLimit = (EditTextPreference) findPreference("nmr_tweets");
 
         PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, true);
 
@@ -107,6 +109,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         String newName = username.getText();
         String newPassword = password.getText();
+        String newLimit = tweetLimit.getText();
         Toast toast;
         String refreshIntervalKey = getActivity().getResources().getString(R.string.refresh_interval_preference_key);
         if(key.equals(refreshIntervalKey)) {
@@ -122,5 +125,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             toast = Toast.makeText(getActivity(), "username changed to " + newPassword, Toast.LENGTH_SHORT);
             toast.show();
         }
+        if(key.equals("nmr_tweets")){
+            int i = Integer.parseInt(newLimit);
+            app.tweetList.tweetLimit = i;
+        }
+        PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, true);
     }
 }

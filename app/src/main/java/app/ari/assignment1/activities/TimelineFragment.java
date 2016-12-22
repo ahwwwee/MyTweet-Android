@@ -65,13 +65,17 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         tweetList = app.tweetList;
         tweets = tweetList.tweets;
         if (app.tweetServiceAvailable) {
-            Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getFollowing(app.currentUser._id);
-            call.enqueue(this);
+            getTweets();
         }
         registerBroadcastReceiver();
         timeFrag = this;
         adapter = new TweetAdapter(getActivity(), tweets);
         setListAdapter(adapter);
+    }
+
+    public void getTweets(){
+        Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getFollowing(app.currentUser._id);
+        call.enqueue(this);
     }
 
     /**
@@ -94,7 +98,6 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
     {
         intentFilter = new IntentFilter(BROADCAST_ACTION);
         ResponseReceiver responseReceiver = new ResponseReceiver();
-        // Registers the ResponseReceiver and its intent filters
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(responseReceiver, intentFilter);
     }
 
@@ -194,6 +197,10 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
                     toast.show();
                 }
                 return true;
+            case R.id.refresh:
+                if (app.tweetServiceAvailable){
+                    getTweets();
+                }
         }
         return super.onOptionsItemSelected(item);
     }

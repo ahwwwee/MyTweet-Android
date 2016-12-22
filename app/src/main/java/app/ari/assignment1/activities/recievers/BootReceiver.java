@@ -26,7 +26,7 @@ import app.ari.assignment1.activities.settings.RefreshService;
  * The approach adopted is to sent an intent from the app and again from the setting if
  * the user changes the refresh frequency.
  */
-class BootReceiver extends BroadcastReceiver
+public class BootReceiver extends BroadcastReceiver
 {
     private final int NUMBER_MILLIS_PER_MINUTE = 60000;
     private final int ONE_MINUTE = 60000;
@@ -64,7 +64,6 @@ class BootReceiver extends BroadcastReceiver
 
     }
 }
-
 /**
  * Class containing single method to validate a string resolves to an integer
  */
@@ -92,3 +91,5 @@ class NumUtil
     }
 
 }
+
+

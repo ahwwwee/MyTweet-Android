@@ -71,6 +71,7 @@ public class TweetApp extends Application {
         tweetServiceOpen = retrofit.create(TweetServiceOpen.class);
 
         app = this;
+        sendBroadcast(new Intent("app.ari.assignment1.recievers.SEND_BROADCAST"));
     }
 
     /**
