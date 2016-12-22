@@ -68,6 +68,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     private static final int REQUEST_PHOTO = 0;
     public TweeterPager tweeterPager;
     public TweeterPager.PagerAdapter pagerAdapter;
+    public String tweetId;
 
     private ImageView cameraButton;
     private ImageView photoView;
@@ -86,7 +87,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         user = app.currentUser;
         tweetList = app.tweetList;
         if (getArguments() != null) {
-            String tweetId = (String) getArguments().getSerializable(EXTRA_TWEET_ID);
+            tweetId = (String) getArguments().getSerializable(EXTRA_TWEET_ID);
             tweet = tweetList.getTweet(tweetId);
         } else {
             tweet = app.currentTweet;
@@ -151,7 +152,11 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
      */
     public void updateControls(Tweet tweet)
     {
-        tweetTweet.setText(tweet.content);
+        if(tweet.content.equals("")){
+            tweetTweet.setText(" ");
+        }else {
+            tweetTweet.setText(tweet.content);
+        }
         date.setText(tweet.date);
         tweetTweet.setEnabled(false);
         if(tweet.path != null){
@@ -171,19 +176,31 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         switch (item.getItemId())
         {
             case R.id.settings:
-                if(tweetMessage.equals("") || tweet.content == null){
+                if(!tweetMessage.equals("") || tweet.content != null || tweet.data != null) {
+                    if(tweetId != null){
+                        startActivity(new Intent(getActivity(), SettingsActivity.class));
+                        return true;
+                    }else {
+                        TweetList.tweets.remove(tweet);
+                    }
+                } else {
                     TweetList.tweets.remove(tweet);
-                    pagerAdapter.notifyDataSetChanged();
                 }
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             case android.R.id.home:
-                if(tweetMessage.equals("") || tweet.content == null){
+                if(!tweetMessage.equals("") || tweet.content != null || tweet.data != null) {
+                    if(tweetId != null){
+                        navigateUp(getActivity());
+                        return true;
+                    }else {
+                        TweetList.tweets.remove(tweet);
+                    }
+                } else {
                     TweetList.tweets.remove(tweet);
                 }
                 navigateUp(getActivity());
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -206,8 +223,6 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        Bundle bundle = data.getExtras();
-
         if (resultCode != Activity.RESULT_OK)
         {
             return;
@@ -226,7 +241,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                     tweet.path = filename;
                     app.currentTweet = tweet;
 
-                    //showPhoto(getActivity(), tweet, photoView );
+                    showPhoto(getActivity(), tweet, photoView );
                 }
                 break;
         }
@@ -287,7 +302,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
             case (R.id.tweetButton):
                 Toast toast = Toast.makeText(getActivity(), "Tweet Sent", Toast.LENGTH_SHORT);
                 toast.show();
-                if(!tweetMessage.equals("") || app.currentTweet.picture != null){
+                if(!tweetMessage.equals("") || app.currentTweet.data != null){
                     tweet = app.currentTweet;
                     tweetList.deleteTweet(tweet);
                     tweet.content = tweetMessage;

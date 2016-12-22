@@ -74,6 +74,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                setResult(Activity.RESULT_CANCELED);
                 return true;
 
             default:
@@ -105,7 +106,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(this, "Camera app not present on this device", Toast.LENGTH_SHORT).show();
             return;
         }
-        // The device has a camera app ... so use it.
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent,CAMERA_RESULT);
         savePhoto.setEnabled(true);
@@ -157,25 +157,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         data.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
-
-        JSONArray array = new JSONArray();
-        array.put(byteArray);
-        /*int i = 0;
-        Byte[] byteByte = new Byte[byteArray.length];
-        for (byte b : byteArray){
-            byteByte[i++] = b;
-        }
-        */
-        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-        JSONObject json = new JSONObject();
-        json.put("data", byteArray);
-        app.currentTweet.picture = json;
+        app.currentTweet.data = byteArray;
     }
 
     public Tweet nodeImageConvert(Tweet tweet){
-        byte[] array = Base64.decode(tweet.picture.toString(), Base64.DEFAULT);
-        Bitmap decoded = BitmapFactory.decodeByteArray(array, 0, array.length);
+        Bitmap decoded = BitmapFactory.decodeByteArray(tweet.data, 0, tweet.data.length);
         String filename = UUID.randomUUID().toString() + ".png";
         if (writeBitmap(this, filename, decoded) == true) {
             Intent intent = new Intent();

@@ -11,8 +11,18 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -141,11 +151,34 @@ public class TweetApp extends Application {
         toast.show();
     }
 
-    public Tweet nodeImageConvert(Tweet tweet){
-        /*byte[] array = Base64.decode(tweet.picture.toString().getBytes(), Base64.DEFAULT);
-        Bitmap decoded = BitmapFactory.decodeByteArray(array, 0, array.length);*/
+    public Tweet nodeImageConvert(Tweet tweet) {
+        /*try {
+            String obj = tweet.picture.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }*/
         String filename = UUID.randomUUID().toString() + ".png";
-        tweet.path = filename;
+        if(tweet.path == null){
+            tweet.path = filename;
+        }
+        if(tweet.picture != null){
+            Object array = tweet.picture.data.get("data");
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutput out =null;
+            try {
+                out = new ObjectOutputStream(bos);
+                out.writeObject(array);
+                out.flush();
+                tweet.data = bos.toByteArray();
+                tweet.bmp = BitmapFactory.decodeByteArray(tweet.data, 0, tweet.data.length);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        /*
+        */
         /*Bitmap pic = tweet.picture;
         int size = pic.getHeight() * pic.getWidth();
         ByteBuffer buffer = ByteBuffer.allocate(size);
@@ -153,6 +186,7 @@ public class TweetApp extends Application {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         pic.compress(Bitmap.CompressFormat.PNG, 50, bos);
         tweet.picture = pic;*/
+
         return tweet;
     }
 }

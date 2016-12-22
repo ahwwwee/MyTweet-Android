@@ -22,9 +22,10 @@ public class Tweet {
     public User tweeter;
     public String firstName;
     public String lastName;
-    public JSONObject picture;
+    public Picture picture;
     public byte[] data;
     public String path;
+    public Bitmap bmp;
 
     /**
      * constructor for a new tweet

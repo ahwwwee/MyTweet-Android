@@ -83,7 +83,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Ca
     public void onResponse(Call<Token> call, Response<Token> response) {
         app.tweetServiceAvailable = true;
         Token auth = response.body();
-        if(auth.success != false) {
+        if(auth != null && auth.success != false) {
             app.tweetList.addUser(user);
             app.currentUser = user;
             app.userCurrent = auth.user;
