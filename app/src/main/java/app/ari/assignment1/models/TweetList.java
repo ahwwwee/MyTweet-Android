@@ -35,6 +35,7 @@ public class TweetList {
             allUsers = (List<User>) dbHelper.selectUsers();
         } catch (Exception e) {
             tweets = new ArrayList<>();
+            users = new ArrayList<>();
             allUsers = new ArrayList<>();
         }
     }

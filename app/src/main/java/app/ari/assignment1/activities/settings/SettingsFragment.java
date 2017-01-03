@@ -25,8 +25,7 @@ import static app.ari.assignment1.helper.Helper.navigateUp;
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener
 {
     private SharedPreferences prefs;
-    public EditTextPreference username;
-    public EditTextPreference password;
+    public EditTextPreference tweetTimer;
     public EditTextPreference tweetLimit;
     public User user;
     private TweetApp app;
@@ -44,8 +43,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         app = TweetApp.getApp();
         user = app.currentUser;
-        username = (EditTextPreference) findPreference("username");
-        password = (EditTextPreference) findPreference("password");
+        tweetList = app.tweetList;
+        tweetTimer = (EditTextPreference) findPreference("refresh_interval");
         tweetLimit = (EditTextPreference) findPreference("nmr_tweets");
 
         PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, true);
@@ -107,28 +106,18 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        String newName = username.getText();
-        String newPassword = password.getText();
         String newLimit = tweetLimit.getText();
-        Toast toast;
-        String refreshIntervalKey = getActivity().getResources().getString(R.string.refresh_interval_preference_key);
-        if(key.equals(refreshIntervalKey)) {
-            getActivity().sendBroadcast(new Intent("app.ari.assignment1.activities.recievers.SEND_BROADCAST"));
-        }
-        if(!newName.isEmpty()){
-            user.firstName = newName;
-            toast = Toast.makeText(getActivity(), "username changed to " + newName, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-        if(!newPassword.isEmpty()) {
-            user.password = newPassword;
-            toast = Toast.makeText(getActivity(), "username changed to " + newPassword, Toast.LENGTH_SHORT);
-            toast.show();
+        String newTime = tweetTimer.getText();
+        if(key.equals("refresh_interval")) {
+            int i = Integer.parseInt(newTime) * 1000 * 60; //to output minute interval
+            app.currentUser.timer = i;
+            tweetList.addUser(app.currentUser);
         }
         if(key.equals("nmr_tweets")){
             int i = Integer.parseInt(newLimit);
             app.tweetList.tweetLimit = i;
+            app.currentUser.limit = i;
+            tweetList.addUser(app.currentUser);
         }
-        PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, true);
     }
 }

@@ -2,19 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-        android:key="username"
-        android:summary="@string/username_summary"
-        android:title="@string/username"
-        android:defaultValue=""/>
-
-    <EditTextPreference
-        android:key="password"
-        android:summary="@string/password_summary"
-        android:title="@string/password"
-        android:inputType="textPassword"
-        android:defaultValue=""/>
-
-    <EditTextPreference
         android:key="nmr_tweets"
         android:defaultValue="10"
         android:summary="@string/nmr_tweets_summary"
@@ -22,7 +9,7 @@
         android:inputType="text"/>
 
     <EditTextPreference
-        android:key="@string/refresh_interval_preference_key"
+        android:key="refresh_interval"
         android:defaultValue="15"
         android:summary="@string/set_refresh_interval_summary"
         android:title="@string/set_refresh_interval"

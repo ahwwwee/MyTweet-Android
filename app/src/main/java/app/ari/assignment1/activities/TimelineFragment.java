@@ -2,6 +2,10 @@ package app.ari.assignment1.activities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.os.Handler;
 
 import app.ari.assignment1.activities.settings.SettingsActivity;
 import app.ari.assignment1.R;
@@ -42,15 +46,11 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
     private TweetAdapter adapter;
     TweetApp app;
     public ListView timeline;
-    private User user;
     private TweetList tweetList;
-    public static final String BROADCAST_ACTION = "app.ari.assignment1.activities.TimelineFragment";
-    private IntentFilter intentFilter;
     protected static TimelineFragment timeFrag;
-    public CameraActivity camera;
-
-
-
+    private final Handler handler = new Handler();
+    public int timer;
+    private Timer countdown;
     /**
      * Loads these when the activity is opened
      * @param savedInstanceState
@@ -62,12 +62,17 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         getActivity().setTitle(R.string.app_name);
 
         app = TweetApp.getApp();
+            timer = app.currentUser.timer;
+            countdown = new Timer();
+            countdown.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    getTweets();
+                }
+            }, 0, timer);
+
         tweetList = app.tweetList;
         tweets = tweetList.tweets;
-        if (app.tweetServiceAvailable) {
-            getTweets();
-        }
-        registerBroadcastReceiver();
         timeFrag = this;
         adapter = new TweetAdapter(getActivity(), tweets);
         setListAdapter(adapter);
@@ -92,13 +97,6 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         timeline.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         timeline.setMultiChoiceModeListener(this);
         return v;
-    }
-
-    private void registerBroadcastReceiver()
-    {
-        intentFilter = new IntentFilter(BROADCAST_ACTION);
-        ResponseReceiver responseReceiver = new ResponseReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(responseReceiver, intentFilter);
     }
 
     /**
@@ -271,23 +269,13 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         return timeFrag;
     }
 
+    /**
+     * refreshes tweetlist, needed to be used when tweets are updated and user is on this page
+     */
     public void refresh(){
         adapter.notifyDataSetChanged();
     }
 
-    //Broadcast receiver for receiving status updates from the IntentService
-    private class ResponseReceiver extends BroadcastReceiver
-    {
-        //private void ResponseReceiver() {}
-        // Called when the BroadcastReceiver gets an Intent it's registered to receive
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            //refreshDonationList();
-            adapter.tweets = app.tweetList.tweets;
-            adapter.notifyDataSetChanged();
-        }
-    }
 }
 
 /**

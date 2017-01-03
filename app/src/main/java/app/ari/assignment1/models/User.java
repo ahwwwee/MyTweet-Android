@@ -18,6 +18,9 @@ public class User {
     public String email;
     public List<String> following;
     public List<String> followedBy;
+    public int limit;
+    public int timer;
+
 
     /**
      * constructor for a User
@@ -25,10 +28,12 @@ public class User {
     public User(){
     }
 
-    public User(String firstName, String lastName, String email, String password){
+    public User(String firstName, String lastName, String email, String password, int timer, int limit){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.timer = timer;
+        this.limit = limit;
     }
 }

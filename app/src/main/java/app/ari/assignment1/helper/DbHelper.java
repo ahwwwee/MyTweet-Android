@@ -36,6 +36,8 @@ public class DbHelper extends SQLiteOpenHelper
     static final String LASTNAME = "lastName";
     static final String PASSWORD = "password";
     static final String EMAIL = "email";
+    static final String LIMIT = "tweet_limit";
+    static final String TIMER = "timer";
 
     Context context;
 
@@ -65,10 +67,12 @@ public class DbHelper extends SQLiteOpenHelper
         String userTable =
                 "CREATE TABLE tableUsers " +
                         "(_id text primary key, " +
-                        "firstName text," +
-                        "lastName text," +
-                        "email text," +
-                        "password text)";
+                        "firstName text, " +
+                        "lastName text, " +
+                        "email text, " +
+                        "password text, " +
+                        "tweet_limit INTEGER, " +
+                        "timer INTEGER)";
 
         db.execSQL(tweetTable);
         db.execSQL(userTable);
@@ -105,6 +109,8 @@ public class DbHelper extends SQLiteOpenHelper
         values.put(LASTNAME, user.lastName);
         values.put(EMAIL, user.email);
         values.put(PASSWORD, user.password);
+        values.put(LIMIT, user.limit);
+        values.put(TIMER, user.timer);
 
         // Insert record
         db.insert(TABLE_USERS, null, values);
@@ -179,6 +185,8 @@ public class DbHelper extends SQLiteOpenHelper
                 user.lastName = cursor.getString(columnIndex++);
                 user.email = cursor.getString(columnIndex++);
                 user.password = cursor.getString(columnIndex++);
+                user.limit = cursor.getInt(columnIndex++);
+                user.timer = cursor.getInt(columnIndex++);
             }
         }
         finally {
@@ -249,6 +257,8 @@ public class DbHelper extends SQLiteOpenHelper
                 user.lastName = cursor.getString(columnIndex++);
                 user.email = cursor.getString(columnIndex++);
                 user.password = cursor.getString(columnIndex++);
+                user.limit = cursor.getInt(columnIndex++);
+                user.timer = cursor.getInt(columnIndex++);
                 columnIndex = 0;
 
                 users.add(user);

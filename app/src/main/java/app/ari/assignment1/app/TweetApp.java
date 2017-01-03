@@ -52,7 +52,6 @@ public class TweetApp extends Application {
     public User userCurrent;
     protected static TweetApp app;
     public Tweet currentTweet;
-    public CameraActivity camera;
 
     /**
      * Loads these when the application is opened

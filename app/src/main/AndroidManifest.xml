@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="app.ari.assignment1">
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -58,13 +59,5 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value="app.ari.assignment1.activities.TweeterPager"/>
         </activity>
-        <receiver android:name=".activities.recievers.BootReceiver"
-            android:exported="false">
-            <intent-filter >
-                <action android:name="app.ari.assignment1.activities.recievers.SEND_BROADCAST"/>
-            </intent-filter>
-        </receiver>
-        <service android:name="activities.settings.RefreshService"
-            android:exported="false"/>
     </application>
 </manifest>
