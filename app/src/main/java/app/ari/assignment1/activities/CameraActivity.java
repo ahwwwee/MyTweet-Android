@@ -1,12 +1,16 @@
 package app.ari.assignment1.activities;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Camera;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -48,7 +52,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private Bitmap Photo;
     private TweetApp app;
     public String path;
-    public static CameraActivity camera;
+    public static final int CAMERA_PERMISSION = 0;
 
     /**
      * Loads these when the activity is opened
@@ -95,7 +99,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
 
         switch(view.getId()) {
-            case R.id.takePhoto     : onTakePhotoClicked(view);
+            case R.id.takePhoto     :
+                checkCameraPermission();
+                //onTakePhotoClicked(view);
                 break;
             case R.id.savePhoto     :
                 try {
@@ -109,9 +115,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * method for when takePhoto button is clicked. Opens the camera application if available.
-     * @param v
      */
-    public void onTakePhotoClicked(View v)
+    public void onTakePhotoClicked()
     {
         // Check for presence of device camera. If not present advise user and quit method.
         PackageManager pm = getPackageManager();
@@ -192,6 +197,40 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         data.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         app.currentTweet.data = byteArray;
+    }
+
+    /**
+     * http://stackoverflow.com/questions/32714787/android-m-permissions-onrequestpermissionsresult-not-being-called
+     * This is an override of AppCompat.onRequestPermissionsResult
+     *
+     * @param requestCode
+     * @param permissions String array of permissions requested.
+     * @param grantResults int array of results for permissions request.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case CameraActivity.CAMERA_RESULT : {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    onTakePhotoClicked();
+                }
+                break;
+            }
+        }
+    }
+
+    private void checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+            onTakePhotoClicked();
+        }
+        else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION);
+        }
     }
 
 }

@@ -1,15 +1,15 @@
 package app.ari.assignment1.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import app.ari.assignment1.R;
 
 /**
- * Created by ictskills on 16/12/16.
+ * Created by Ari on 16/12/16.
  */
 public class TweetActivity extends AppCompatActivity {
     ActionBar actionBar;
@@ -21,7 +21,7 @@ public class TweetActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
 
-        FragmentManager manager = getSupportFragmentManager();
+        FragmentManager manager = getFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
         if (fragment == null)
         {

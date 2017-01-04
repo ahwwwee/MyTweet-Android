@@ -13,12 +13,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
+import android.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -41,6 +45,9 @@ import android.widget.ImageView;
 
 import static app.ari.assignment1.helper.ContactHelper.sendEmail;
 import static app.ari.assignment1.helper.Helper.navigateUp;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.content.ContextCompat;
+
 
 /**
  * Created by Ari on 10/10/16.
@@ -69,6 +76,7 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
     public TweeterPager tweeterPager;
     public TweeterPager.PagerAdapter pagerAdapter;
     public String tweetId;
+    Intent data;
 
     private ImageView cameraButton;
     private ImageView photoView;
@@ -230,9 +238,8 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         switch (requestCode)
         {
             case REQUEST_CONTACT:
-                String name = ContactHelper.getContact(getActivity(), data);
-                emailAddress = ContactHelper.getEmail(getActivity(), data);
-                selectContact.setText(emailAddress);
+                this.data = data;
+                checkContactsReadPermission();
                 break;
             case REQUEST_PHOTO:
                 String filename = data.getStringExtra(CameraActivity.EXTRA_PHOTO_FILENAME);
@@ -244,6 +251,57 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
                     showPhoto(getActivity(), tweet, photoView );
                 }
                 break;
+        }
+    }
+
+    /**
+     * http://stackoverflow.com/questions/32714787/android-m-permissions-onrequestpermissionsresult-not-being-called
+     * This is an override of FragmentCompat.onRequestPermissionsResult
+     *
+     * @param requestCode Example REQUEST_CONTACT
+     * @param permissions String array of permissions requested.
+     * @param grantResults int array of results for permissions request.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CONTACT: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    readContact();
+                }
+                break;
+            }
+        }
+    }
+
+    private void readContact() {
+        String name = ContactHelper.getContact(getActivity(), data);
+        emailAddress = ContactHelper.getEmail(getActivity(), data);
+        selectContact.setText(name + ": "+emailAddress);
+    }
+
+    /**
+     * Bespoke method to check if read contacts permission exists.
+     * If it exists then the contact sought is read.
+     * Otherwise, the method FragmentCompat.request permissions is invoked and
+     * The response is via the callback onRequestPermissionsResult.
+     * In onRequestPermissionsResult, on successfully being granted permission then the sought contact is read.
+     */
+    private void checkContactsReadPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+
+            readContact();
+        }
+        else {
+            // Invoke callback to request user-granted permission
+            FragmentCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    REQUEST_CONTACT);
         }
     }
 

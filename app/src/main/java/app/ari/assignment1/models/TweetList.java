@@ -41,13 +41,7 @@ public class TweetList {
             allUsers = new ArrayList<>();
         }
         app = TweetApp.getApp();
-        if(app.currentUser.limit > 0){
-            tweetLimit = app.currentUser.limit;
-        } else {
-            app.currentUser.limit = 10;
-            addUser(app.currentUser);
-            tweetLimit = 10;
-        }
+        tweetLimit = 10;
     }
 
 

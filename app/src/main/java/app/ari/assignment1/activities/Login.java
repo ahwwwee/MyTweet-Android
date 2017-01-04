@@ -84,6 +84,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Ca
             app.tweetList.addUser(user);
             app.currentUser = user;
             app.userCurrent = auth.user;
+            if(user.limit > 0){
+                app.tweetList.tweetLimit = user.limit;
+            } else {
+                app.currentUser.limit = 10;
+                app.tweetList.addUser(user);
+                app.tweetList.tweetLimit = 10;
+            }
             app.tweetService = RetrofitServiceFactory.createService(TweetService.class, auth.token);
             app.serviceAvailableMessage();
             startActivity(new Intent(this, Timeline.class));
