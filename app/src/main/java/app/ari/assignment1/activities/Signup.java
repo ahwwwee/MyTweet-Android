@@ -62,7 +62,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener, C
         String Email = this.email.getText().toString();
         String Password = this.password.getText().toString();
 
-        user = new User(FirstName, LastName, Email, Password, 60000, 10);
+        user = new User(FirstName, LastName, Email, Password, 600000, 10);
 
         Call<User> call= (Call<User>)app.tweetServiceOpen.createUser(user);
         call.enqueue(this);

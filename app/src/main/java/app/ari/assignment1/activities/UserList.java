@@ -17,6 +17,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,6 +27,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static app.ari.assignment1.helper.Helper.navigateUp;
 
 /**
  * Created by ictskills on 29/11/16.
@@ -70,7 +75,8 @@ public class UserList extends AppCompatActivity implements AdapterView.OnItemCli
         if (response.body() != null){
             for (User u : response.body()) {
                 if (u._id.equals(app.currentUser._id)) {
-                    app.currentUser = u;
+                    app.currentUser.following = u.following;
+                    app.currentUser.followedBy = u.followedBy;
                 } else {
                     another.add(u);
                 }
@@ -87,6 +93,17 @@ public class UserList extends AppCompatActivity implements AdapterView.OnItemCli
         toast.show();
         app.tweetServiceAvailable = false;
         startActivity(new Intent(this, Timeline.class));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case android.R.id.home:
+                navigateUp(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -129,7 +146,6 @@ public class UserList extends AppCompatActivity implements AdapterView.OnItemCli
                     }
                 });
             }
-
         } else {
             Call<User> call = (Call<User>) app.tweetService.follow(app.currentUser._id, userId);
             call.enqueue(new Callback<User>() {

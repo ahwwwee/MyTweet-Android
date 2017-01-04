@@ -16,7 +16,7 @@ import retrofit2.http.Path;
  */
 public interface TweetServiceOpen {
 
-    @POST("/api/users/authenticate")
+    @POST("/api/users/aurAuthenticate")
     Call<Token> auth(@Body User user);
 
     @POST("/api/users")

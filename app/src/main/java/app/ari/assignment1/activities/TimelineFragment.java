@@ -48,7 +48,6 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
     public ListView timeline;
     private TweetList tweetList;
     protected static TimelineFragment timeFrag;
-    private final Handler handler = new Handler();
     public int timer;
     private Timer countdown;
     /**
@@ -62,14 +61,20 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         getActivity().setTitle(R.string.app_name);
 
         app = TweetApp.getApp();
+        if(app.currentUser.timer > 0) {
             timer = app.currentUser.timer;
-            countdown = new Timer();
-            countdown.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    getTweets();
-                }
-            }, 0, timer);
+        } else {
+            app.currentUser.timer = 60000;
+            app.tweetList.addUser(app.currentUser);
+            timer = 60000;
+        }
+        countdown = new Timer();
+        countdown.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getTweets();
+            }
+        }, 0, timer);
 
         tweetList = app.tweetList;
         tweets = tweetList.tweets;
@@ -78,6 +83,20 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         setListAdapter(adapter);
     }
 
+    /**
+     * this method is used whenever this activity is exited.
+     * it makes sure that the activity is no longer on the stack
+     * its needed to stop the timer when the user is nolonger on the page
+     */
+    @Override
+    public void onStop(){
+        getActivity().finish();
+        super.onStop();
+    }
+
+    /**
+     * to be called when refresh is needed
+     */
     public void getTweets(){
         Call<List<Tweet>> call = (Call<List<Tweet>>) app.tweetService.getFollowing(app.currentUser._id);
         call.enqueue(this);
@@ -151,9 +170,8 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
      */
     @Override
     public void onResume() {
-        super.onResume();
         adapter.notifyDataSetChanged();
-        ((TweetAdapter) getListAdapter()).notifyDataSetChanged();
+        super.onResume();
     }
 
     /**

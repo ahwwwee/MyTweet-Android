@@ -68,14 +68,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Ca
     public void onClick(View view) {
         Email = this.email.getText().toString();
         Password = this.password.getText().toString();
-        user = app.findByEmail(Email);
+        user = new User(null, null, Email, Password, 600000, 10);
         if (user != null) {
             Call<Token> call = (Call<Token>) app.tweetServiceOpen.auth(user);
             call.enqueue(this);
-        } else {
-            Toast toast = Toast.makeText(Login.this, "no user with these credentials", Toast.LENGTH_SHORT);
-            toast.show();
-            startActivity(new Intent(this, Signup.class));
         }
     }
 
@@ -83,6 +79,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Ca
     public void onResponse(Call<Token> call, Response<Token> response) {
         app.tweetServiceAvailable = true;
         Token auth = response.body();
+        user = auth.user;
         if(auth != null && auth.success != false) {
             app.tweetList.addUser(user);
             app.currentUser = user;

@@ -109,7 +109,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         String newLimit = tweetLimit.getText();
         String newTime = tweetTimer.getText();
         if(key.equals("refresh_interval")) {
-            int i = Integer.parseInt(newTime) * 1000 * 60; //to output minute interval
+            int i = Integer.parseInt(newTime) * 10000 * 60; //to output minute interval
             app.currentUser.timer = i;
             tweetList.addUser(app.currentUser);
         }

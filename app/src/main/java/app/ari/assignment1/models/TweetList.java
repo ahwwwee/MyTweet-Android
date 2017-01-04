@@ -11,6 +11,7 @@ import java.util.List;
 
 import app.ari.assignment1.activities.Timeline;
 import app.ari.assignment1.activities.TimelineFragment;
+import app.ari.assignment1.app.TweetApp;
 import app.ari.assignment1.helper.DbHelper;
 
 /**
@@ -22,7 +23,8 @@ public class TweetList {
     public static List<User> allUsers;
     public DbHelper dbHelper;
     public TimelineFragment timeline;
-    public int tweetLimit = 10;
+    public TweetApp app;
+    public int tweetLimit;
 
     /**
      * constructor for a Tweetlist. for keeping track of all of all tweets.
@@ -37,6 +39,14 @@ public class TweetList {
             tweets = new ArrayList<>();
             users = new ArrayList<>();
             allUsers = new ArrayList<>();
+        }
+        app = TweetApp.getApp();
+        if(app.currentUser.limit > 0){
+            tweetLimit = app.currentUser.limit;
+        } else {
+            app.currentUser.limit = 10;
+            addUser(app.currentUser);
+            tweetLimit = 10;
         }
     }
 
