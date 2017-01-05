@@ -1,15 +1,22 @@
 package app.ari.assignment1.activities;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 
 import app.ari.assignment1.activities.settings.SettingsActivity;
 import app.ari.assignment1.R;
 import app.ari.assignment1.app.TweetApp;
+import app.ari.assignment1.helper.Compare;
 import app.ari.assignment1.models.TweetList;
 import app.ari.assignment1.models.Tweet;
 import app.ari.assignment1.models.User;
@@ -17,6 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.util.Base64;
 import android.view.ActionMode;
 import android.widget.AbsListView;
 import android.widget.ListView;
@@ -37,6 +45,8 @@ import android.widget.Toast;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.content.BroadcastReceiver;
+
+import static app.ari.assignment1.helper.FileIOHelper.writeBitmap;
 
 /**
  * Created by Ari on 10/10/16.
@@ -87,12 +97,12 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
      * this method is used whenever this activity is exited.
      * it makes sure that the activity is no longer on the stack
      * its needed to stop the timer when the user is nolonger on the page
-     */
+
     @Override
     public void onStop(){
         getActivity().finish();
         super.onStop();
-    }
+    }*/
 
     /**
      * to be called when refresh is needed
@@ -127,12 +137,26 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
         List<Tweet> array = new ArrayList<>();
         for(Tweet t : response.body()){
             if(t.picture != null){
-                t = app.nodeImageConvert(t);
+                if(t.buffer != null) {
+                    byte[] decodedString = Base64.decode(t.buffer, Base64.DEFAULT);
+                    t.bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    t.bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    if(t.path == null) {
+                        t.path = UUID.randomUUID().toString() + ".png";
+                        if (writeBitmap(getActivity(), t.path, t.bitmap)) {
+                            Intent intent = new Intent();
+                            intent.putExtra(CameraActivity.EXTRA_PHOTO_FILENAME, t.path);
+                            getActivity().setResult(Activity.RESULT_OK, intent);
+                        }
+                    }
+                }
                 array.add(t);
             }else{
                 array.add(t);
             }
         }
+        Collections.sort(array, new Compare());
         tweetList.refreshTweets(array);
         adapter.notifyDataSetChanged();
         app.tweetServiceAvailable = true;

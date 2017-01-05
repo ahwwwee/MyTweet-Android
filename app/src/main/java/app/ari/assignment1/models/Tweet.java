@@ -26,6 +26,8 @@ public class Tweet {
     public Bitmap bmp;
     public String firstName;
     public String lastName;
+    public String buffer;
+    public Bitmap bitmap;
 
     /**
      * constructor for a new tweet

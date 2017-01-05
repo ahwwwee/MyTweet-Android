@@ -170,6 +170,9 @@ public class TweeterFragment extends Fragment implements OnCheckedChangeListener
         if(tweet.path != null){
             showPhoto(getActivity(), tweet, photoView);
         }
+        cameraButton.setVisibility(View.GONE);
+        tweetButton.setVisibility(View.GONE);
+        counter.setVisibility(View.GONE);
     }
 
     /**

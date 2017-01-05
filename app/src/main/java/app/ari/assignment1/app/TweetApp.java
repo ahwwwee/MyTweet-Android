@@ -152,35 +152,4 @@ public class TweetApp extends Application {
         Toast toast = Toast.makeText(this, "Tweet Contacted Successfully", Toast.LENGTH_LONG);
         toast.show();
     }
-
-    /**
-     * converting images not taken on the app to readable files
-     * @param tweet
-     * @return
-     */
-    public Tweet nodeImageConvert(Tweet tweet) {
-        String filename = UUID.randomUUID().toString() + ".png";
-        if(tweet.path == null){
-            tweet.path = filename;
-        }
-        /*attempting to decode images coming from node application*/
-        if(tweet.picture != null){
-            Object array = tweet.picture.data.get("data");
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutput out = null;
-            try {
-                out = new ObjectOutputStream(bos);
-                out.writeObject(array);
-                out.flush();
-                byte[] bytes = bos.toByteArray();
-                //byte[] decoded = Base64.decode(bytes.toString(), Base64.URL_SAFE);
-                tweet.data = bytes;
-                tweet.bmp = BitmapFactory.decodeByteArray(tweet.data, 0, tweet.data.length);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return tweet;
-    }
 }

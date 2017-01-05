@@ -140,7 +140,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent();
             intent.putExtra(EXTRA_PHOTO_FILENAME, filename);
             setResult(Activity.RESULT_OK, intent);
-            path = filename;
             setTweetPhoto(data);
         }
         else {
