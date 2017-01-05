@@ -1,5 +1,6 @@
 package app.ari.assignment1;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import app.ari.assignment1.models.Tweet;
@@ -29,8 +30,8 @@ public interface TweetService {
     @POST("/api/users/{id}/tweets")
     Call<Tweet> createTweet(@Path("id") String id, @Body Tweet tweet);
 
-    @DELETE("/api/tweets/{id}")
-    Call<Tweet> deleteOne(@Path("id") String id);
+    @POST("/api/tweets/{id}")
+    Call<User> deleteSome(@Path("id") String ID, @Body String[] id);
 
     @POST("/api/update/{id}")
     Call<Tweet> update(@Path("id") String id, @Body String content);

@@ -41,7 +41,7 @@ import android.content.BroadcastReceiver;
 /**
  * Created by Ari on 10/10/16.
  */
-public class TimelineFragment extends ListFragment implements AbsListView.MultiChoiceModeListener, Callback<List<Tweet>> {
+public class TimelineFragment extends ListFragment implements AbsListView.MultiChoiceModeListener, Callback<List<Tweet>>{
     private List<Tweet> tweets;
     private TweetAdapter adapter;
     TweetApp app;
@@ -270,10 +270,40 @@ public class TimelineFragment extends ListFragment implements AbsListView.MultiC
      * @param actionMode
      */
     public void deleteTweet(ActionMode actionMode) {
+        final ArrayList<Tweet> tweets = new ArrayList<>();
+        String array[] = new String[adapter.getCount() - 1];
+        int j = 0;
         for (int i = adapter.getCount() - 1; i >= 0; i--) {
             if (timeline.isItemChecked(i)) {
-                tweetList.deleteTweet(adapter.getItem(i));
+                Tweet newTweet = adapter.getItem(i);
+                if(app.currentUser._id.equals(newTweet.tweeter._id)) {
+                    array[j] = newTweet._id;
+                    tweets.add(newTweet);
+                    j++;
+                }
             }
+        }
+        String tweetId[] = new String[j];
+        for (int i = 0; i < tweets.size(); i++){
+            tweetId[i] = array[i];
+        }
+        if(tweetId.length > 0) {
+            Call<User> call = (Call<User>) app.tweetService.deleteSome(app.currentUser._id, tweetId);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    for (Tweet t : tweets) {
+                        app.tweetList.deleteTweet(t);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Toast toast = Toast.makeText(getActivity(), "Error deleting tweets", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
         }
         actionMode.finish();
         adapter.notifyDataSetChanged();
